@@ -1,0 +1,25 @@
+{
+    "files.associations": {
+        "gdk.h": "c",
+        "gdkconfig.h": "c",
+        "gdkcairo.h": "c",
+        "gdkversionmacros.h": "c",
+        "gtk.h": "c",
+        "gtkfilechooser.h": "c",
+        "gtkfixed.h": "c",
+        "gtkfilefilter.h": "c",
+        "gdkenumtypes.h": "c",
+        "gdkevents.h": "c",
+        "malloc_allocator.h": "c",
+        "gtkeventcontroller.h": "c",
+        "gtkentrycompletion.h": "c",
+        "gtktreeviewcolumn.h": "c",
+        "gtktreemodel.h": "c",
+        "glib-object.h": "c",
+        "gsignal.h": "c",
+        "gparamspecs.h": "c",
+        "stdlib.h": "c",
+        "limits": "c",
+        "gtkwindow.h": "c"
+    }
+}
