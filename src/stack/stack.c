@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
 #include "stack.h"
-#include "internal_stack.h"
+#include "private_stack.h"
 
 #define STD_CAP 64
 
