@@ -5,7 +5,7 @@
 
 #ifndef STACK_VALUE_TYPE
 #define STACK_VALUE_TYPE int
-#endif  //!STACK_VALUE_TYPE
+#endif  /* STACK_VALUE_TYPE */
 
 
 typedef enum statuses {
@@ -20,4 +20,4 @@ typedef struct stack {
     STACK_VALUE_TYPE *array;
 } stack_t;
 
-#endif  //!SRC_STACK_TYPE_H_
+#endif  /* SRC_STACK_TYPE_H_ */

@@ -7,7 +7,7 @@ libstack.a:
 	cp ./stack/libstack.a .
 
 calculator.out: clean
-	$(CC) `pkg-config --cflags gtk+-3.0` main.c plotter/plotter.c -o $@ $(ERROR_FLAGS) $(DEBUG_FLAGS) `pkg-config --libs gtk+-3.0` -rdynamic -lm
+	$(CC) `pkg-config --cflags gtk+-3.0` main.c plotter/plotter.c callbacks.c -o $@ $(ERROR_FLAGS) $(DEBUG_FLAGS) `pkg-config --libs gtk+-3.0` -rdynamic -lm
 	./$@
 
 clean:

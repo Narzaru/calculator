@@ -64,4 +64,4 @@ STACK_VALUE_TYPE pop(stack_t *stack);
  */
 STACK_VALUE_TYPE peek(stack_t *stack);
 
-#endif  //!SRC_STACK_H_
+#endif  /* SRC_STACK_H_ */

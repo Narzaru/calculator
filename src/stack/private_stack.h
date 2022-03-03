@@ -24,4 +24,4 @@ status_t extend_stack(stack_t **stack);
  */
 bool is_full(stack_t *stack);
 
-#endif  //!SRC_INTERNAL_STACK_H_
+#endif  /* SRC_INTERNAL_STACK_H_ */
