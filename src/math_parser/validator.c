@@ -10,7 +10,3 @@ void fix_expression(char *expression) {
         }
     } while (*expression++ = *d++);
 }
-
-bool is_correct_expression(char *expression) {
-
-}
