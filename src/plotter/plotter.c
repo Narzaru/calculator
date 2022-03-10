@@ -8,13 +8,13 @@
 #define UNUSED(expr) (void)(expr)
 
 typedef struct {
-	GtkDrawingArea *draw_area;           /* plot area */
+	GtkDrawingArea *draw_area;      /* plot area */
     GtkWindow *window;              /* plotting window */
 	double *x;                      /* array of x */
 	double *y;                      /* array of y */
     double range[2];                /* all x`s values */
     double domain[2];               /* all y`s values */
-	uint64_t count_of_dots;     /* length of arrays */
+	uint64_t count_of_dots;         /* length of arrays */
 } plotter_t;
 
 typedef struct {
