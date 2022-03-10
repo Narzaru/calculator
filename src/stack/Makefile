@@ -12,7 +12,7 @@ OBJECT_FILES := $(addprefix $(BUILD_DIR)/,$(SOURCE_FILES:.c=.o))
 
 
 #### build options
-INCLUDE_PATH := .
+INCLUDE_PATH := . ..
 INCLUDE_FLAG := $(addprefix -I,$(INCLUDE_PATH))
 
 

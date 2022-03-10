@@ -1,16 +1,23 @@
 #ifndef SRC_MATH_PARSER_LEXEME_H_
 #define SRC_MATH_PARSER_LEXEME_H_
 
+/************
+ * INCLUDES *
+ ************/
+#include "errors.h"
+
 /**************
  * BASE TYPES *
  **************/
 enum lexeme_type {
-    type_number,
-    type_open_bracket,
-    type_function,
-    type_delimiter,
-    type_operation,
-    type_close_bracket
+    type_incorrect,     /* on incorrect input */
+    type_number,        /* number 0.5, 16, ... */
+    type_open_bracket,  /* bracket ( */
+    type_function,      /* function sin, cos */
+    type_delimiter,     /* delimiter , not used*/
+    type_operation,     /* opearation + - */
+    type_close_bracket, /* bracket ) */
+    type_x_var          /* variable x */
 };
 
 enum operation_type {
@@ -18,9 +25,9 @@ enum operation_type {
     operation_add,
     operation_sub,
     operation_mul,
+    operation_div,
     operation_pow,
-    operation_mod,
-    operation_unary
+    operation_mod
 };
 
 enum function_type {
@@ -46,6 +53,7 @@ struct lexeme {
 struct lexemes {
     struct lexeme *all;
     long int count_lexemes;
+    long int capacity;
 };
 
 
@@ -63,7 +71,9 @@ lexemes_t *new_lexemes_struct(void);
 
 void destroy_lexemes_struct(lexemes_t **ls);
 
-void push_lexem(lexemes_t *ls, lexeme_t l);
+void push_lexem(lexemes_t **ls, lexeme_t l);
+
+status_t extend_lexemes_struct(lexemes_t **ls);
 
 lexeme_t get_lexem_at(lexemes_t *ls, long int at);
 

@@ -7,13 +7,6 @@
 #define STACK_VALUE_TYPE int
 #endif  /* STACK_VALUE_TYPE */
 
-
-typedef enum statuses {
-    OK = 0,
-    ALLOC_ERROR = 1,
-    REALLOC_ERROR = 2,
-} status_t;
-
 typedef struct stack {
     ssize_t top;
     ssize_t capacity;

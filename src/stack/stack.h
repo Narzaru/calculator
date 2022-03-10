@@ -5,6 +5,7 @@
 #include <stdbool.h>
 
 #include "stack_type.h"
+#include "errors.h"
 
 /**
  * @brief Create a stack object

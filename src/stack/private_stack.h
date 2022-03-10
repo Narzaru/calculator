@@ -2,6 +2,7 @@
 #define SRC_INTERNAL_STACK_H_
 
 #include "stack_type.h"
+#include "errors.h"
 
 /**
  * @brief It try to realloc the stack

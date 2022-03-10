@@ -3,6 +3,7 @@ CC := gcc -std=c11
 ERROR_FLAGS := -Wall -Wextra
 SANITIZE := -g3 -fsanitize=address
 MAKE_DEPENDENCE := -MD
+MATH_LIB := -lm
 
 
 #### files
@@ -11,9 +12,8 @@ SOURCE_FILES := $(filter-out main.c, $(wildcard *.c))
 OBJECT_FILES := $(addprefix $(BUILD_DIR)/,$(SOURCE_FILES:.c=.o))
 
 #### build options
-INCLUDE_PATH := .
+INCLUDE_PATH := . ..
 INCLUDE_FLAG := $(addprefix -I,$(INCLUDE_PATH))
-
 
 #### include dependence file
 -include $(BUILD_DIR)/*.d
@@ -21,7 +21,7 @@ INCLUDE_FLAG := $(addprefix -I,$(INCLUDE_PATH))
 #### targets
 ## build object files
 $(BUILD_DIR)/%.o: %.c
-	$(CC) $< -c -o $@ $(ERROR_FLAGS) $(SANITIZE) -MD
+	$(CC) $(INCLUDE_FLAG) $< -c -o $@ $(ERROR_FLAGS) $(SANITIZE) -MD $(MATH_LIB)
 
 ## build libstack.a target from object files
 math_parser.a: $(OBJECT_FILES)
@@ -37,11 +37,12 @@ re: clean libstack.a
 all: libstack.a
 
 clean:
-	find . -name "*.o" -print
-	find . -name "*.a" -print
-	find . -name "*.d" -print
+	find . -name "*.out" 	-delete
+	find . -name "*.o" 		-delete
+	find . -name "*.a" 		-delete
+	find . -name "*.d" 		-delete
 
 #### extra targets
 fprog: math_parser.a
-	$(CC) $(ERROR_FLAGS) $(SANITIZE) main.c $< -o main.out
+	$(CC) $(INCLUDE_FLAG) $(ERROR_FLAGS) $(SANITIZE) main.c $< -o main.out
 	./main.out
