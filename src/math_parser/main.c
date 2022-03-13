@@ -13,7 +13,7 @@ void print_func(enum function_type func);
 void print_num(double num);
 
 int main(void) {
-    char a[] = "85.5 + 8 + .5 * cos(sin(3.3))";
+    char a[] = "85.5 + 8 + .5 * cos(sin(3.3)) + ln(x) - 185.5 a 3";
     lexemes_t *ls = create_tokens_from_expression(a);
     print(ls);
     lexemes_t *ls_out = form_postfix_notation(ls);
@@ -24,20 +24,25 @@ int main(void) {
 }
 
 void print(lexemes_t *ls) {
-    printf("| ITER |     TYPE      |    OPER   |    FUNC   |     VALUE    |\n");
-    printf("---------------------------------------------------------------\n");
-    for (int i = 0; i < ls->count_lexemes; ++i) {
-        printf("| %-4d | ", i);
-        print_type(get_lexem_at(ls, i).type);
-        printf(" | ");
-        print_oper(get_lexem_at(ls, i).oper);
-        printf(" | ");
-        print_func(get_lexem_at(ls, i).func);
-        printf(" | ");
-        print_num(get_lexem_at(ls, i).value);
-        printf(" |");
-        printf("\n");
+    if (ls == NULL) {
+        printf("NULL object\n");
+    } else {
+        printf("| ITER |     TYPE      |    OPER   |    FUNC   |     VALUE    |\n");
+        printf("---------------------------------------------------------------\n");
+        for (int i = 0; i < ls->count_lexemes; ++i) {
+            printf("| %-4d | ", i);
+            print_type(get_lexem_at(ls, i).type);
+            printf(" | ");
+            print_oper(get_lexem_at(ls, i).oper);
+            printf(" | ");
+            print_func(get_lexem_at(ls, i).func);
+            printf(" | ");
+            print_num(get_lexem_at(ls, i).value);
+            printf(" |");
+            printf("\n");
+        }
     }
+    printf("\n");
 }
 
 void print_type(enum lexeme_type type) {
@@ -107,7 +112,7 @@ void print_oper(enum operation_type oper) {
             break;
         }
         case operation_mod: {
-            printf("    %    ");
+            printf("    %%    ");
             break;
         }
         default: {

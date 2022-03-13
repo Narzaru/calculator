@@ -235,7 +235,7 @@ bool is_token_a_function(char *token) {
 
 enum operation_type get_lexeme_operation(enum lexeme_type type, char *token) {
     enum operation_type operation;
-    
+
     if (type == type_operation) {
         switch (*token) {
           case '+': {
