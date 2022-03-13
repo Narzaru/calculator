@@ -12,7 +12,7 @@ OBJECT_FILES := $(addprefix $(BUILD_DIR)/,$(SOURCE_FILES:.c=.o))
 
 
 #### build options
-INCLUDE_PATH := . ..
+INCLUDE_PATH := . .. ../math_parser/
 INCLUDE_FLAG := $(addprefix -I,$(INCLUDE_PATH))
 
 
@@ -22,7 +22,7 @@ INCLUDE_FLAG := $(addprefix -I,$(INCLUDE_PATH))
 #### targets
 ## build object files
 $(BUILD_DIR)/%.o: %.c
-	$(CC) $< -c -o $@ $(ERROR_FLAGS) $(SANITIZE) -MD
+	$(CC) $(INCLUDE_FLAG) $< -c -o $@ $(ERROR_FLAGS) $(SANITIZE) -MD
 
 ## build libstack.a target from object files
 libstack.a: $(OBJECT_FILES)

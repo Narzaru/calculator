@@ -19,6 +19,11 @@ INCLUDE_FLAG := $(addprefix -I,$(INCLUDE_PATH))
 -include $(BUILD_DIR)/*.d
 
 #### targets
+## build stack library
+libstack.a:
+	make -C ../stack/ libstack.a
+	cp ../stack/libstack.a .
+
 ## build object files
 $(BUILD_DIR)/%.o: %.c
 	$(CC) $(INCLUDE_FLAG) $< -c -o $@ $(ERROR_FLAGS) $(SANITIZE) -MD $(MATH_LIB)
@@ -26,6 +31,7 @@ $(BUILD_DIR)/%.o: %.c
 ## build libstack.a target from object files
 math_parser.a: $(OBJECT_FILES)
 	ar rc $@ $(OBJECT_FILES)
+	ar rc $@
 	ranlib $@
 
 
@@ -37,12 +43,12 @@ re: clean libstack.a
 all: libstack.a
 
 clean:
-	find . -name "*.out" 	-delete
-	find . -name "*.o" 		-delete
-	find . -name "*.a" 		-delete
-	find . -name "*.d" 		-delete
+	find . -name "*.out" -delete
+	find . -name "*.o" -delete
+	find . -name "*.a" -delete
+	find . -name "*.d" -delete
 
 #### extra targets
-fprog: math_parser.a
-	$(CC) $(INCLUDE_FLAG) $(ERROR_FLAGS) $(SANITIZE) main.c $< -o main.out
+fprog: math_parser.a libstack.a
+	$(CC) $(INCLUDE_FLAG) $(ERROR_FLAGS) $(SANITIZE) main.c math_parser.a libstack.a -o main.out
 	./main.out

@@ -64,7 +64,7 @@ STACK_VALUE_TYPE pop(stack_t *stack) {
 }
 
 STACK_VALUE_TYPE peek(stack_t *stack) {
-    return stack->array[(stack->top - 1)];
+    return stack->array[(stack->top)];
 }
 
 status_t extend_stack(stack_t **stack) {

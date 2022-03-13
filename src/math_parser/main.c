@@ -16,7 +16,10 @@ int main(void) {
     char a[] = "85.5 + 8 + .5 * cos(sin(3.3))";
     lexemes_t *ls = create_tokens_from_expression(a);
     print(ls);
+    lexemes_t *ls_out = form_postfix_notation(ls);
+    print(ls_out);
     destroy_lexemes_struct(&ls);
+    destroy_lexemes_struct(&ls_out);
     return 0;
 }
 
@@ -44,7 +47,7 @@ void print_type(enum lexeme_type type) {
             break;
         }
         case type_number: {
-            printf("    number   ");
+            printf("   number    ");
             break;
         }
         case type_open_bracket: {

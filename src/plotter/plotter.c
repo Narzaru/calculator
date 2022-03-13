@@ -191,7 +191,7 @@ void draw_function(cairo_t *cr, packed_data_t *data) {
     uint64_t i = 1;
     while (i < plotter.count_of_dots) {
         if (isnan(plotter.y[i]) || isinf(plotter.y[i])) {
-            while (i  < plotter.count_of_dots - 1 && (isnan(plotter.y[i]) || isinf(plotter.y[i]))) {
+            while (i < plotter.count_of_dots - 1 && (isnan(plotter.y[i]) || isinf(plotter.y[i]))) {
                     i++;
             }
             cairo_move_to(
@@ -261,7 +261,7 @@ void draw_labels(cairo_t *cr, packed_data_t *data) {
     cairo_text_extents_t extents;
 
     /* label axis x from below */
-    cairo_set_source_rgb(cr, 128.0,128.0, 0.0);
+    cairo_set_source_rgb(cr, 128.0, 128.0, 0.0);
     cairo_select_font_face(cr, "Helvetica", CAIRO_FONT_SLANT_ITALIC, CAIRO_FONT_WEIGHT_NORMAL);
     cairo_set_font_size(cr, 12.0);
     for (int i = 0; i < 7; ++i) {
