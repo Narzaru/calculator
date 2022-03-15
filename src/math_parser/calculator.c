@@ -23,24 +23,24 @@ bool is_close_bracket(lexeme_t *lexeme);
 
 bool is_function(lexeme_t *lexeme);
 
-lexemes_t *form_postfix_notation(lexemes_t *lexemes) {
+lexemes_t *form_postfix_notation(lexemes_t *ls) {
     lexemes_t *out_lexeme = new_lexemes_struct();
     stack_t *stack = create_stack();
-    lexeme_t lexeme;
+    lexeme_t l;
 
-    for (int i = 0; (out_lexeme != NULL) && (i < lexemes->count_lexemes); ++i) {
-        lexeme = get_lexem_at(lexemes, i);
+    for (int i = 0; (out_lexeme != NULL) && (i < ls->count_lexemes); ++i) {
+        l = get_lexem_at(ls, i);
         // if number
-        if (is_number(&lexeme)) {
-            push_lexem(&out_lexeme, lexeme);
+        if (is_number(&l)) {
+            push_lexem(&out_lexeme, l);
         // if function
-        } else if (is_function(&lexeme)) {
-            push(&stack, lexeme);
+        } else if (is_function(&l)) {
+            push(&stack, l);
         // if open bracket
-        } else if (is_open_bracket(&lexeme)) {
-            push(&stack, lexeme);
+        } else if (is_open_bracket(&l)) {
+            push(&stack, l);
         // if close bracket
-        } else if (is_close_bracket(&lexeme)) {
+        } else if (is_close_bracket(&l)) {
             while (!is_empty(stack) && (peek(stack).type != type_open_bracket)) {
                 push_lexem(&out_lexeme, pop(stack));
             }
@@ -49,14 +49,14 @@ lexemes_t *form_postfix_notation(lexemes_t *lexemes) {
             }
             pop(stack);
         // if operator
-        } else if (is_operator(&lexeme)) {
+        } else if (is_operator(&l)) {
             while (
                 !is_empty(stack)
                 && ((peek(stack).type == type_function)
-                || (get_priority(peek(stack).oper) >= get_priority(lexeme.oper)))) {
+                || (get_priority(peek(stack).oper) >= get_priority(l.oper)))) {
                 push_lexem(&out_lexeme, pop(stack));
             }
-            push(&stack, lexeme);
+            push(&stack, l);
         // else error or delimiter
         } else {
             destroy_lexemes_struct(&out_lexeme);
@@ -64,16 +64,19 @@ lexemes_t *form_postfix_notation(lexemes_t *lexemes) {
     }
 
     while (!is_empty(stack) && out_lexeme != NULL) {
-        lexeme = pop(stack);
-        printf("%d ", lexeme.type);
-        if (!is_operator(&lexeme)) {
+        l = pop(stack);
+        if (!is_operator(&l)) {
             destroy_lexemes_struct(&out_lexeme);
         }
-        push_lexem(&out_lexeme, lexeme);
+        push_lexem(&out_lexeme, l);
     }
 
     destroy_stack(&stack);
     return out_lexeme;
+}
+
+lexemes_t *calculate_postfix_notation(lexemes_t *ls) {
+    
 }
 
 bool is_number(lexeme_t *lexeme) {

@@ -226,7 +226,7 @@ bool is_token_a_number(char *token) {
 bool is_token_a_function(char *token) {
     bool is_function = false;
     for (int i = 1; i < TYPE_ROWS; ++i) {
-        if (strstr(types[i], token) != NULL) {
+        if (strstr(types[i], token) == types[i] && strlen(token) == strlen(types[i])) {
             is_function = true;
         }
     }
@@ -235,7 +235,6 @@ bool is_token_a_function(char *token) {
 
 enum operation_type get_lexeme_operation(enum lexeme_type type, char *token) {
     enum operation_type operation;
-
     if (type == type_operation) {
         switch (*token) {
           case '+': {

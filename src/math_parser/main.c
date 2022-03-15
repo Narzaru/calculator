@@ -13,13 +13,14 @@ void print_func(enum function_type func);
 void print_num(double num);
 
 int main(void) {
-    char a[] = "85.5 + 8 + .5 * cos(sin(3.3)) + ln(x) - 185.5 a 3";
+    char a[] = "85.5 + 8 + .5 * cos(sin(3.3)) + ln(x) - 185.5 + 3";
     lexemes_t *ls = create_tokens_from_expression(a);
     print(ls);
+    destroy_lexemes_struct(&ls);
     lexemes_t *ls_out = form_postfix_notation(ls);
     print(ls_out);
-    destroy_lexemes_struct(&ls);
     destroy_lexemes_struct(&ls_out);
+    
     return 0;
 }
 
