@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdbool.h>
 #include <stdio.h>
 
 #include "lexeme.h"
@@ -52,3 +53,84 @@ status_t extend_lexemes_struct(lexemes_t **ls) {
 lexeme_t get_lexem_at(lexemes_t *ls, long int at) {
     return ls->all[at];
 }
+
+bool is_number(lexeme_t *l) {
+    bool is_number;
+    if (l->type == type_x_var || l->type == type_number) {
+        is_number = true;
+    } else {
+        is_number = false;
+    }
+    return is_number;
+}
+
+bool is_function(lexeme_t *l) {
+    bool is_function;
+    if (l->type == type_function) {
+        is_function = true;
+    } else {
+        is_function = false;
+    }
+    return is_function;
+}
+
+bool is_open_bracket(lexeme_t *l) {
+    bool is_open_bracket;
+    if (l->type == type_open_bracket) {
+        is_open_bracket = true;
+    } else {
+        is_open_bracket = false;
+    }
+    return is_open_bracket;
+}
+
+bool is_close_bracket(lexeme_t *l) {
+    bool is_close_bracket;
+    if (l->type == type_close_bracket) {
+        is_close_bracket = true;
+    } else {
+        is_close_bracket = false;
+    }
+    return is_close_bracket;
+}
+
+bool is_operator(lexeme_t *l) {
+    bool is_operator;
+    if (l->type == type_operator || l->type == type_unary) {
+        is_operator = true;
+    } else {
+        is_operator = false;
+    }
+    return is_operator;
+}
+
+bool is_unary(lexeme_t *l) {
+    bool is_unary;
+    if (l->type == type_unary) {
+        is_unary = true;
+    } else {
+        is_unary = false;
+    }
+    return is_unary;
+}
+
+bool is_digits(lexeme_t *l) {
+    bool is_digits;
+    if (l->type == type_number) {
+        is_digits = true;
+    } else {
+        is_digits = false;
+    }
+    return is_digits;
+}
+
+bool is_var(lexeme_t *l) {
+    bool is_var;
+    if (l->type == type_x_var) {
+        is_var = true;
+    } else {
+        is_var = false;
+    }
+    return is_var;
+}
+

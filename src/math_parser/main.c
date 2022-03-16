@@ -8,19 +8,21 @@
 
 void print(lexemes_t *ls);
 void print_type(enum lexeme_type type);
-void print_oper(enum operation_type oper);
+void print_oper(enum operator_type oper);
 void print_func(enum function_type func);
 void print_num(double num);
 
 int main(void) {
-    char a[] = "85.5 + 8 + .5 * cos(sin(3.3)) + ln(x) - 185.5 + 3";
+    char a[] = "8 + 5";
     lexemes_t *ls = create_tokens_from_expression(a);
     print(ls);
-    destroy_lexemes_struct(&ls);
-    lexemes_t *ls_out = form_postfix_notation(ls);
+    lexemes_t *ls_out = form_rpn(ls);
     print(ls_out);
+    lexemes_t *res = simplify_rpn(ls);
+    print(res);
+    destroy_lexemes_struct(&ls);
     destroy_lexemes_struct(&ls_out);
-    
+    destroy_lexemes_struct(&res);
     return 0;
 }
 
@@ -68,7 +70,7 @@ void print_type(enum lexeme_type type) {
             printf("  BIG ERROR  ");
             break;
         }
-        case type_operation: {
+        case type_operator: {
             printf("  operation  ");
             break;
         }
@@ -80,40 +82,52 @@ void print_type(enum lexeme_type type) {
             printf("      x      ");
             break;
         }
+        case type_unary: {
+            printf("   unary     ");
+            break;
+        }
         default: {
             printf("  BIG ERROR  ");
         }
     }
 }
 
-void print_oper(enum operation_type oper) {
+void print_oper(enum operator_type oper) {
     switch (oper) {
-        case operation_not_operation: {
+        case operator_not_operation: {
             printf("         ");
             break;
         }
-        case operation_add: {
+        case operator_add: {
             printf("    +    ");
             break;
         }
-        case operation_sub: {
+        case operator_sub: {
             printf("    -    ");
             break;
         }
-        case operation_mul: {
+        case operator_mul: {
             printf("    *    ");
             break;
         }
-        case operation_div: {
+        case operator_div: {
             printf("    /    ");
             break;
         }
-        case operation_pow: {
+        case operator_pow: {
             printf("    ^    ");
             break;
         }
-        case operation_mod: {
+        case operator_mod: {
             printf("    %%    ");
+            break;
+        }
+        case operator_unary_add: {
+            printf("    +    ");
+            break;
+        }
+        case operator_unary_sub: {
+            printf("    -    ");
             break;
         }
         default: {

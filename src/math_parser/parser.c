@@ -94,16 +94,16 @@ bool is_token_a_function(char *token);
  * 
  * @param type lexeme_type
  * @param token string token
- * @return enum operation_type 
+ * @return enum operator_type 
  */
-enum operation_type get_lexeme_operation(enum lexeme_type type, char *token);
+enum operator_type get_lexeme_operation(enum lexeme_type type, char *token);
 
 /**
  * @brief Get the lexeme function type from a string token
  * 
  * @param type lexeme_type
  * @param token string token
- * @return enum operation_type 
+ * @return enum operator_type 
  */
 enum function_type get_lexeme_function(enum lexeme_type type, char *token);
 
@@ -200,7 +200,7 @@ enum lexeme_type get_lexeme_type(char *token) {
         } else if (*p_char == ')') {
             token_type = type_close_bracket;
         } else {
-            token_type = type_operation;
+            token_type = type_operator;
         }
     /* if function */
     } else if (is_token_a_function(token)) {
@@ -233,40 +233,40 @@ bool is_token_a_function(char *token) {
     return is_function;
 }
 
-enum operation_type get_lexeme_operation(enum lexeme_type type, char *token) {
-    enum operation_type operation;
-    if (type == type_operation) {
+enum operator_type get_lexeme_operation(enum lexeme_type type, char *token) {
+    enum operator_type operation;
+    if (type == type_operator) {
         switch (*token) {
           case '+': {
-            operation = operation_add;
+            operation = operator_add;
             break;
           }
           case '-': {
-            operation = operation_sub;
+            operation = operator_sub;
             break;
           }
           case '*': {
-            operation = operation_mul;
+            operation = operator_mul;
             break;
           }
           case '/': {
-            operation = operation_div;
+            operation = operator_div;
             break;
           }
           case '^': {
-            operation = operation_pow;
+            operation = operator_pow;
             break;
           }
           case '%': {
-            operation = operation_mod;
+            operation = operator_mod;
             break;
           }
           default: {
-            operation = operation_not_operation;
+            operation = operator_not_operation;
           }
         }
     } else {
-        operation = operation_not_operation;
+        operation = operator_not_operation;
     }
     return operation;
 }

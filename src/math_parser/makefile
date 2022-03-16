@@ -36,7 +36,7 @@ math_parser.a: $(OBJECT_FILES)
 
 
 #### phony targets
-.PHONY: clean all re
+.PHONY: clean all re clear
 
 re: clean libstack.a
 
@@ -48,7 +48,10 @@ clean:
 	find . -name "*.a" -delete
 	find . -name "*.d" -delete
 
+clear:
+	clear
+
 #### extra targets
-fprog: math_parser.a libstack.a
+fprog: clear math_parser.a libstack.a
 	$(CC) $(INCLUDE_FLAG) $(ERROR_FLAGS) $(SANITIZE) main.c math_parser.a libstack.a -o main.out
 	./main.out
