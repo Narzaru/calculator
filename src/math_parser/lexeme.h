@@ -16,7 +16,7 @@ enum lexeme_type {
     type_open_bracket,  /* bracket ( */
     type_function,      /* function sin, cos */
     type_delimiter,     /* delimiter , not used*/
-    type_operator,     /* opearation + - */
+    type_operator,      /* opearation + - */
     type_unary,         /* unary operator */
     type_close_bracket, /* bracket ) */
     type_x_var          /* variable x */

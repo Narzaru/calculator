@@ -53,5 +53,5 @@ clear:
 
 #### extra targets
 fprog: clear math_parser.a libstack.a
-	$(CC) $(INCLUDE_FLAG) $(ERROR_FLAGS) $(SANITIZE) main.c math_parser.a libstack.a -o main.out
+	$(CC) $(INCLUDE_FLAG) $(ERROR_FLAGS) $(SANITIZE) main.c math_parser.a libstack.a -o main.out $(MATH_LIB)
 	./main.out

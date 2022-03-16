@@ -13,12 +13,12 @@ void print_func(enum function_type func);
 void print_num(double num);
 
 int main(void) {
-    char a[] = "8 + 5";
+    char a[] = "ln(x) - 185.5 + 3";
     lexemes_t *ls = create_tokens_from_expression(a);
     print(ls);
     lexemes_t *ls_out = form_rpn(ls);
     print(ls_out);
-    lexemes_t *res = simplify_rpn(ls);
+    lexemes_t *res = simplify_rpn(ls_out);
     print(res);
     destroy_lexemes_struct(&ls);
     destroy_lexemes_struct(&ls_out);
@@ -30,8 +30,8 @@ void print(lexemes_t *ls) {
     if (ls == NULL) {
         printf("NULL object\n");
     } else {
-        printf("| ITER |     TYPE      |    OPER   |    FUNC   |     VALUE    |\n");
-        printf("---------------------------------------------------------------\n");
+        printf("| ITER |     TYPE      |    OPER   |    FUNC   |     VALUE     |\n");
+        printf("----------------------------------------------------------------\n");
         for (int i = 0; i < ls->count_lexemes; ++i) {
             printf("| %-4d | ", i);
             print_type(get_lexem_at(ls, i).type);
@@ -188,8 +188,8 @@ void print_func(enum function_type func) {
 
 void print_num(double num) {
     if (isnan(num)) {
-        printf("     nan    ");
+        printf("     nan     ");
     } else {
-        printf("%.6e", num);
+        printf("%+.6e", num);
     }
 }
