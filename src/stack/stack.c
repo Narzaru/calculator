@@ -64,6 +64,7 @@ STACK_VALUE_TYPE pop(stack_t *stack) {
 }
 
 STACK_VALUE_TYPE peek(stack_t *stack) {
+    volatile lexeme_t l = stack->array[(stack->top)];
     return stack->array[(stack->top)];
 }
 

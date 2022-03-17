@@ -13,16 +13,24 @@ void print_func(enum function_type func);
 void print_num(double num);
 
 int main(void) {
-    char a[] = "ln(x) - 185.5 + 3";
-    lexemes_t *ls = create_tokens_from_expression(a);
-    print(ls);
-    lexemes_t *ls_out = form_rpn(ls);
-    print(ls_out);
-    lexemes_t *res = simplify_rpn(ls_out);
-    print(res);
-    destroy_lexemes_struct(&ls);
-    destroy_lexemes_struct(&ls_out);
-    destroy_lexemes_struct(&res);
+    // char a[] = "sin(3+5)*8-cos(sin(ln(15)*8)-6)";
+    char a[] = "sin(3+5)*8-cos(sin(ln(15)*8)-6)";
+    lexemes_t *tokens = create_tokens_from_expression(a);
+    print(tokens);
+    if (is_valid_tokens(tokens)) {
+        lexemes_t *rpn = form_rpn(tokens);
+        if (rpn != NULL) {
+            lexeme_t res = calculate_rpn(rpn);
+            print(rpn);
+            printf("%.12g", res.value);
+            destroy_lexemes_struct(&rpn);
+        } else {
+            printf("error in form_rpn");    
+        }
+    } else {
+        printf("error in create_tokens_from_expression");
+    }
+    destroy_lexemes_struct(&tokens);
     return 0;
 }
 

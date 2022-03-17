@@ -34,6 +34,40 @@ lexeme_t calc(stack_t *stack, lexeme_t operator);
 /***************************
  * FUNCTION IMPLEMENTATION *
  ***************************/
+bool is_valid_tokens(lexemes_t *ls) {
+    lexeme_t l;
+    lexeme_t pl;
+    int brackets_dif = 0;
+    bool is_correct;
+    bool has_incorrect_chunk;
+    for (int i = 0; i < ls->count_lexemes; ++i) {
+        l = get_lexem_at(ls, i);
+        if (is_open_bracket(&l)) {
+            brackets_dif++;
+        } else if (is_close_bracket(&l)) {
+            brackets_dif--;
+        } else if (l.type == type_incorrect) {
+            has_incorrect_chunk = false;
+        }
+    }
+
+    if (brackets_dif == 0) {
+        is_correct = true;
+        pl = get_lexem_at(ls, 0);
+        for (int i = 1; i < ls->count_lexemes && is_correct == true; ++i) {
+            l = get_lexem_at(ls, i);
+            if (is_operator(&pl) && (!is_number(&l) && !is_function(&l) && !is_open_bracket(&l)) && !is_operator(&l)) {
+                is_correct = false;
+            }
+            pl = l;
+        }
+    } else {
+        is_correct = false;
+    }
+
+    return is_correct & !has_incorrect_chunk;
+}
+
 lexemes_t *form_rpn(lexemes_t *ls) {
     bool is_unary = true;
     lexemes_t *out_lexeme = new_lexemes_struct();
@@ -49,6 +83,7 @@ lexemes_t *form_rpn(lexemes_t *ls) {
         // if function
         } else if (is_function(&l)) {
             push(&stack, l);
+            is_unary = false;
         // if open bracket
         } else if (is_open_bracket(&l)) {
             push(&stack, l);
@@ -62,6 +97,9 @@ lexemes_t *form_rpn(lexemes_t *ls) {
                 destroy_lexemes_struct(&out_lexeme);
             }
             pop(stack);
+            if (!is_empty(stack) && peek(stack).type == type_function) {
+                push_lexem(&out_lexeme, pop(stack));
+            }
             is_unary = false;
         // if operator
         } else if (is_operator(&l)) {
@@ -70,9 +108,10 @@ lexemes_t *form_rpn(lexemes_t *ls) {
             }
             while (
                 !is_empty(stack)
-                && (
-                    (!is_right_associative(&l) && get_priority(peek(stack).oper) >= get_priority(l.oper))
-                    || (is_right_associative(&l) && get_priority(peek(stack).oper) > get_priority(l.oper)))) {
+                && peek(stack).type == type_operator
+                && ((!is_right_associative(&l) && get_priority(peek(stack).oper) >= get_priority(l.oper))
+                    || (is_right_associative(&l) && get_priority(peek(stack).oper) > get_priority(l.oper))
+                    )) {
                 push_lexem(&out_lexeme, pop(stack));
             }
             push(&stack, l);
@@ -133,14 +172,11 @@ int get_priority(enum operator_type oper) {
     return priority;
 }
 
-lexemes_t *simplify_rpn(lexemes_t *ls) {
-    lexemes_t *out_lexeme = new_lexemes_struct();
+lexeme_t calculate_rpn(lexemes_t *ls) {
     stack_t *stack = create_stack();
     lexeme_t l;
 
-    int x_pos;
-
-    for (int i = 0; (out_lexeme != NULL) && (i < ls->count_lexemes); ++i) {
+    for (int i = 0; i < ls->count_lexemes; ++i) {
         l = get_lexem_at(ls, i);
         if (is_number(&l)) {
             push(&stack, l);
@@ -149,11 +185,9 @@ lexemes_t *simplify_rpn(lexemes_t *ls) {
         }
     }
 
-    while (!is_empty(stack)) {
-        push_lexem(&out_lexeme, pop(stack));
-    }
+    l = pop(stack);
     destroy_stack(&stack);
-    return out_lexeme;
+    return l;
 }
 
 lexeme_t calc(stack_t *stack, lexeme_t operator) {
@@ -161,153 +195,80 @@ lexeme_t calc(stack_t *stack, lexeme_t operator) {
     lexeme_t l2;
     lexeme_t lo;
 
-    double num1;
-    double num2;
-
-    bool is_calulatable;
-
     if (operator.oper == operator_add) {
-        if (peek(stack).type != type_x_var) {
-            l1 = pop(stack);
-            l2 = pop(stack);
-            memcpy(&lo, &l1, sizeof(lexeme_t));
-            lo.value = l2.value + l1.value;
-        } else {
-            lo = operator;
-        }
+        l1 = pop(stack);
+        l2 = pop(stack);
+        memcpy(&lo, &l1, sizeof(lexeme_t));
+        lo.value = l2.value + l1.value;
     } else if (operator.oper == operator_sub) {
-        if (peek(stack).type != type_x_var) {
-            l1 = pop(stack);
-            l2 = pop(stack);
-            memcpy(&lo, &l1, sizeof(lexeme_t));
-            lo.value = l2.value - l1.value;
-        } else {
-            lo = operator;
-        }
+        l1 = pop(stack);
+        l2 = pop(stack);
+        memcpy(&lo, &l1, sizeof(lexeme_t));
+        lo.value = l2.value - l1.value;
     } else if (operator.oper == operator_mul) {
-        if (peek(stack).type != type_x_var) {
-            l1 = pop(stack);
-            l2 = pop(stack);
-            memcpy(&lo, &l1, sizeof(lexeme_t));
-            lo.value = l2.value * l1.value;
-        } else {
-            lo = operator;
-        }
+        l1 = pop(stack);
+        l2 = pop(stack);
+        memcpy(&lo, &l1, sizeof(lexeme_t));
+        lo.value = l2.value * l1.value;
     } else if (operator.oper == operator_div) {
-        if (peek(stack).type != type_x_var) {
-            l1 = pop(stack);
-            l2 = pop(stack);
-            memcpy(&lo, &l1, sizeof(lexeme_t));
-            lo.value = l2.value / l1.value;
-        } else {
-            lo = operator;
-        }
+        l1 = pop(stack);
+        l2 = pop(stack);
+        memcpy(&lo, &l1, sizeof(lexeme_t));
+        lo.value = l2.value / l1.value;
     } else if (operator.oper == operator_mod) {
-        if (peek(stack).type != type_x_var) {
-            l1 = pop(stack);
-            l2 = pop(stack);
-            memcpy(&lo, &l1, sizeof(lexeme_t));
-            lo.value = fmod(l2.value, l1.value);
-        } else {
-            lo = operator;
-        }
+        l1 = pop(stack);
+        l2 = pop(stack);
+        memcpy(&lo, &l1, sizeof(lexeme_t));
+        lo.value = fmod(l2.value, l1.value);
     } else if (operator.oper == operator_pow) {
-        if (peek(stack).type != type_x_var) {
-            l1 = pop(stack);
-            l2 = pop(stack);
-            memcpy(&lo, &l1, sizeof(lexeme_t));
-            lo.value = pow(l2.value, l1.value);
-        } else {
-            lo = operator;
-        }
+        l1 = pop(stack);
+        l2 = pop(stack);
+        memcpy(&lo, &l1, sizeof(lexeme_t));
+        lo.value = pow(l2.value, l1.value);
     } else if (operator.oper == operator_unary_add) {
-        if (peek(stack).type != type_x_var) {
-            l1 = pop(stack);
-            memcpy(&lo, &l1, sizeof(lexeme_t));
-            lo.value = l1.value;
-        } else {
-            lo = operator;
-        }
+        l1 = pop(stack);
+        memcpy(&lo, &l1, sizeof(lexeme_t));
+        lo.value = l1.value;
     } else if (operator.oper == operator_unary_sub) {
-        if (peek(stack).type != type_x_var) {
-            l1 = pop(stack);
-            memcpy(&lo, &l1, sizeof(lexeme_t));
-            lo.value = 0 - l1.value;
-        } else {
-            lo = operator;
-        }
+        l1 = pop(stack);
+        memcpy(&lo, &l1, sizeof(lexeme_t));
+        lo.value = 0 - l1.value;
     } else if (operator.func == function_cos) {
-        if (peek(stack).type != type_x_var) {
-            l1 = pop(stack);
-            memcpy(&lo, &l1, sizeof(lexeme_t));
-            lo.value = cos(l1.value);
-        } else {
-            lo = operator;
-        }
+        l1 = pop(stack);
+        memcpy(&lo, &l1, sizeof(lexeme_t));
+        lo.value = cos(l1.value);
     } else if (operator.func == function_sin) {
-        if (peek(stack).type != type_x_var) {
-            l1 = pop(stack);
-            memcpy(&lo, &l1, sizeof(lexeme_t));
-            lo.value = sin(l1.value);
-        } else {
-            lo = operator;
-        }
+        l1 = pop(stack);
+        memcpy(&lo, &l1, sizeof(lexeme_t));
+        lo.value = sin(l1.value);
     } else if (operator.func == function_tan) {
-        if (peek(stack).type != type_x_var) {
-            l1 = pop(stack);
-            memcpy(&lo, &l1, sizeof(lexeme_t));
-            lo.value = tan(l1.value);
-        } else {
-            lo = operator;
-        }
+        l1 = pop(stack);
+        memcpy(&lo, &l1, sizeof(lexeme_t));
+        lo.value = tan(l1.value);
     } else if (operator.func == function_acos) {
-        if (peek(stack).type != type_x_var) {
-            l1 = pop(stack);
-            memcpy(&lo, &l1, sizeof(lexeme_t));
-            lo.value = acos(l1.value);
-        } else {
-            lo = operator;
-        }
+        l1 = pop(stack);
+        memcpy(&lo, &l1, sizeof(lexeme_t));
+        lo.value = acos(l1.value);
     } else if (operator.func == function_asin) {
-        if (peek(stack).type != type_x_var) {
-            l1 = pop(stack);
-            memcpy(&lo, &l1, sizeof(lexeme_t));
-            lo.value = asin(l1.value);
-        } else {
-            lo = operator;
-        }
+        l1 = pop(stack);
+        memcpy(&lo, &l1, sizeof(lexeme_t));
+        lo.value = asin(l1.value);
     } else if (operator.func == function_atan) {
-        if (peek(stack).type != type_x_var) {
-            l1 = pop(stack);
-            memcpy(&lo, &l1, sizeof(lexeme_t));
-            lo.value = atan(l1.value);
-        } else {
-            lo = operator;
-        }
+        l1 = pop(stack);
+        memcpy(&lo, &l1, sizeof(lexeme_t));
+        lo.value = atan(l1.value);
     } else if (operator.func == function_sqrt) {
-        if (peek(stack).type != type_x_var) {
-            l1 = pop(stack);
-            memcpy(&lo, &l1, sizeof(lexeme_t));
-            lo.value = sqrt(l1.value);
-        } else {
-            lo = operator;
-        }
+        l1 = pop(stack);
+        memcpy(&lo, &l1, sizeof(lexeme_t));
+        lo.value = sqrt(l1.value);
     } else if (operator.func == function_ln) {
-        if (peek(stack).type != type_x_var) {
-            l1 = pop(stack);
-            memcpy(&lo, &l1, sizeof(lexeme_t));
-            lo.value = log(l1.value);
-        } else {
-            lo = operator;
-        }
+        l1 = pop(stack);
+        memcpy(&lo, &l1, sizeof(lexeme_t));
+        lo.value = log(l1.value);
     } else if (operator.func == function_log) {
-        if (peek(stack).type != type_x_var) {
-            l1 = pop(stack);
-            memcpy(&lo, &l1, sizeof(lexeme_t));
-            lo.value = log10(l1.value);
-        } else {
-            lo = operator;
-        }
+        l1 = pop(stack);
+        memcpy(&lo, &l1, sizeof(lexeme_t));
+        lo.value = log10(l1.value);
     }
 
     return lo;

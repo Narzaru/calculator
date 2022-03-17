@@ -51,6 +51,7 @@ struct lexeme {
     enum lexeme_type type;
     enum operator_type oper;
     enum function_type func;
+    int is_null;  /* need for simplify expression */
     double value;
 };
 
