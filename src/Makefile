@@ -6,8 +6,12 @@ math_parser.a:
 	make -C ./math_parser/ math_parser.a
 	cp ./math_parser/math_parser.a .
 
-calculator.out: clean
-	$(CC) `pkg-config --cflags gtk+-3.0` main.c plotter/plotter.c callbacks.c -o $@ $(ERROR_FLAGS) $(DEBUG_FLAGS) `pkg-config --libs gtk+-3.0` -rdynamic -lm
+libstack.a:
+	make -C ./stack/ libstack.a
+	cp ./stack/libstack.a .
+
+calculator.out: clean math_parser.a libstack.a
+	$(CC) `pkg-config --cflags gtk+-3.0` main.c plotter/plotter.c callbacks.c -o $@ $(ERROR_FLAGS) $(DEBUG_FLAGS) `pkg-config --libs gtk+-3.0` -rdynamic -lm -Imath_parser/ -I. math_parser.a libstack.a
 	./$@
 
 clean:

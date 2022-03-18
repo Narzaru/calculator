@@ -11,15 +11,15 @@
  * BASE TYPES *
  **************/
 enum lexeme_type {
-    type_incorrect,     /* on incorrect input */
-    type_number,        /* number 0.5, 16, ... */
-    type_open_bracket,  /* bracket ( */
-    type_function,      /* function sin, cos */
-    type_delimiter,     /* delimiter , not used*/
-    type_operator,      /* opearation + - */
-    type_unary,         /* unary operator */
-    type_close_bracket, /* bracket ) */
-    type_x_var          /* variable x */
+    type_incorrect,
+    type_number,
+    type_open_bracket,
+    type_function,
+    type_delimiter,
+    type_operator,
+    type_unary,
+    type_close_bracket,
+    type_x_var
 };
 
 enum operator_type {
@@ -51,7 +51,6 @@ struct lexeme {
     enum lexeme_type type;
     enum operator_type oper;
     enum function_type func;
-    int is_null;  /* need for simplify expression */
     double value;
 };
 
@@ -82,22 +81,22 @@ status_t extend_lexemes_struct(lexemes_t **ls);
 
 lexeme_t get_lexem_at(lexemes_t *ls, long int at);
 
-bool is_number(lexeme_t *l);
+// bool is_incorrect(lexeme_t l);
 
-bool is_function(lexeme_t *l);
+bool is_number(lexeme_t *l);
 
 bool is_open_bracket(lexeme_t *l);
 
-bool is_close_bracket(lexeme_t *l);
+bool is_function(lexeme_t *l);
+
+// bool is_delimiter(lexeme_t l);
 
 bool is_operator(lexeme_t *l);
 
-void to_unary(lexeme_t *l);
-
-bool is_right_associative(lexeme_t *l);
-
-int get_priority(enum operator_type oper);
-
 bool is_unary(lexeme_t *l);
+
+bool is_close_bracket(lexeme_t *l);
+
+// bool is_x_var(lexeme_t l);
 
 #endif  /* SRC_MATH_PARSER_LEXEME_H_ */

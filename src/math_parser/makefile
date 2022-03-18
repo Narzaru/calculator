@@ -12,7 +12,7 @@ SOURCE_FILES := $(filter-out main.c, $(wildcard *.c))
 OBJECT_FILES := $(addprefix $(BUILD_DIR)/,$(SOURCE_FILES:.c=.o))
 
 #### build options
-INCLUDE_PATH := . ..
+INCLUDE_PATH := . .. ../stack/
 INCLUDE_FLAG := $(addprefix -I,$(INCLUDE_PATH))
 
 #### include dependence file
@@ -40,7 +40,7 @@ math_parser.a: $(OBJECT_FILES)
 
 re: clean libstack.a
 
-all: libstack.a
+all: math_parser.a
 
 clean:
 	find . -name "*.out" -delete

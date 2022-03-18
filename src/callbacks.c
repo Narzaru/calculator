@@ -1,12 +1,36 @@
+#include <math.h>
 #include <gtk/gtk.h>
+#include "calculator.h"
 
 #define UNUSED(expr) (void)(expr)
 
 void on_press_enter(GtkEntry *entry, gpointer null) {
     UNUSED(null);
+
     GtkEntryBuffer *buffer = gtk_entry_get_buffer(entry);
     const gchar *str = gtk_entry_buffer_get_text(buffer);
-    g_print("%s\n", str);
+   
+    char strout[255];
+
+    if (str != NULL) {
+        strcpy(strout, str);
+        lexemes_t *tokens = form_tokens(strout);
+
+        if (is_valid_tokens(tokens)) {
+            lexemes_t *rpn = form_rpn(tokens);
+            if (rpn != NULL) {
+                lexeme_t res = calculate_rpn(rpn);
+                g_snprintf(strout, 255, "%-f", res.value);
+                gtk_entry_buffer_set_text(buffer, strout, strlen(strout));
+                destroy_lexemes_struct(&rpn);
+            } else {
+                gtk_entry_buffer_set_text(buffer, "error", 6);
+            }
+        } else {
+            gtk_entry_buffer_set_text(buffer, "error", 6);
+        }
+        destroy_lexemes_struct(&tokens);
+    }
 }
 
 void on_button_EQ_clicked(GtkButton *b, gpointer io_field) {

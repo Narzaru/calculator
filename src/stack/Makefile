@@ -38,6 +38,6 @@ re: clean libstack.a
 all: libstack.a
 
 clean:
-	find . -name "*.o" -print
-	find . -name "*.a" -print
-	find . -name "*.d" -print
+	find . -name "*.o" -delete
+	find . -name "*.a" -delete
+	find . -name "*.d" -delete

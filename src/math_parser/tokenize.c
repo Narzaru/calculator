@@ -1,3 +1,6 @@
+/************
+ * INCLUDES *
+ ************/
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -119,7 +122,7 @@ double get_lexeme_value(enum lexeme_type type, char *token);
 /*************
  * FUNCTIONS *
  *************/
-lexemes_t *create_tokens_from_expression(char *expression) {
+lexemes_t *form_tokens(char *expression) {
     lexeme_t lexeme;
     lexemes_t *lexemes = new_lexemes_struct();
 
@@ -336,7 +339,7 @@ double get_lexeme_value(enum lexeme_type type, char *token) {
         char *p_char;
         result = strtod(token, &p_char);
         /* if all string is converted */
-        if (p_char == token + strlen(token)) {
+        if (p_char != NULL) {
             if (result == HUGE_VAL || result == -HUGE_VAL) {
                 result = NAN;
             }

@@ -3,7 +3,7 @@
 #include <malloc.h>
 #include <math.h>
 
-#include "lexeme.h"
+#include "calculator_type.h"
 #include "calculator.h"
 
 void print(lexemes_t *ls);
@@ -14,8 +14,8 @@ void print_num(double num);
 
 int main(void) {
     // char a[] = "sin(3+5)*8-cos(sin(ln(15)*8)-6)";
-    char a[] = "sin(3+5)*8-cos(sin(ln(15)*8)-6)";
-    lexemes_t *tokens = create_tokens_from_expression(a);
+    char a[] = "5.5*5";
+    lexemes_t *tokens = form_tokens(a);
     print(tokens);
     if (is_valid_tokens(tokens)) {
         lexemes_t *rpn = form_rpn(tokens);
@@ -28,7 +28,7 @@ int main(void) {
             printf("error in form_rpn");    
         }
     } else {
-        printf("error in create_tokens_from_expression");
+        printf("error in form_tokens");
     }
     destroy_lexemes_struct(&tokens);
     return 0;

@@ -7,7 +7,6 @@
 #define STD_CAP 128
 
 lexemes_t *new_lexemes_struct(void) {
-    /* alloc memory on lexemes_t and lexeme_t[STD_CAP]; */
     lexemes_t *new_object;
     new_object = (lexemes_t *)calloc(sizeof(lexemes_t) + sizeof(lexeme_t) * STD_CAP, sizeof(char));
 
