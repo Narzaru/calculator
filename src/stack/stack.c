@@ -5,25 +5,8 @@
 
 #define STD_CAP 64
 
-/**
- * @brief It try to realloc the stack
- * 
- * @param stack pointer to the stack pointer
- * @return status_t
- * @retval OK
- * @retval REALLOC_ERROR
- */
 status_t extend_stack(stack_t **stack);
 
-
-/**
- * @brief Check stack overflow for realloc
- * 
- * @param stack pointer to the stack
- * @return state
- * @retval true
- * @retval false
- */
 bool is_full(stack_t *stack);
 
 stack_t *create_stack() {

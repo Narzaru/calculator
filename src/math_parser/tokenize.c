@@ -49,74 +49,20 @@ static const char types[TYPE_ROWS][TYPE_COLUMNS] = {
 /************************
  * FUNCTION DECLARATION *
  ************************/
-/**
- * @brief Check if string is a delimiter
- * 
- * @param string 
- * @return true 
- * @return false 
- */
 bool is_delimiter(char *string);
 
-/**
- * @brief Construct a lexeme from a string token
- * 
- * @param l pointer to the lexeme struct
- * @param token string token 
- */
 void construct_lexeme(lexeme_t *l, char *token);
 
-/**
- * @brief Get the lexeme type from a string token
- * 
- * @param token string token
- * @return enum lexeme_type 
- */
 enum lexeme_type get_lexeme_type(char *token);
 
-/**
- * @brief Check if string token is a number
- * 
- * @param token 
- * @return true 
- * @return false 
- */
 bool is_token_a_number(char *token);
 
-/**
- * @brief Check if string token is a function
- * 
- * @param token 
- * @return true 
- * @return false 
- */
 bool is_token_a_function(char *token);
 
-/**
- * @brief Get the lexeme operation type from a string token
- * 
- * @param type lexeme_type
- * @param token string token
- * @return enum operator_type 
- */
 enum operator_type get_lexeme_operation(enum lexeme_type type, char *token);
 
-/**
- * @brief Get the lexeme function type from a string token
- * 
- * @param type lexeme_type
- * @param token string token
- * @return enum operator_type 
- */
 enum function_type get_lexeme_function(enum lexeme_type type, char *token);
 
-/**
- * @brief Get double number from a string token
- * 
- * @param type lexeme_type
- * @param token string token
- * @return double 
- */
 double get_lexeme_value(enum lexeme_type type, char *token);
 
 /*************

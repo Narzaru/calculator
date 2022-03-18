@@ -8,13 +8,13 @@
 #define UNUSED(expr) (void)(expr)
 
 typedef struct {
-	GtkDrawingArea *draw_area;      /* plot area */
-    GtkWindow *window;              /* plotting window */
-	double *x;                      /* array of x */
-	double *y;                      /* array of y */
-    double range[2];                /* all x`s values */
-    double domain[2];               /* all y`s values */
-	uint64_t count_of_dots;         /* length of arrays */
+    GtkDrawingArea *draw_area;
+    GtkWindow *window;
+    double *x;
+    double *y;
+    double range[2];
+    double domain[2];
+    uint64_t count_of_dots;
 } plotter_t;
 
 typedef struct {
@@ -118,30 +118,30 @@ void plotter_draw() {
     gtk_window_set_title(GTK_WINDOW(plotter.window), "plote");
 
     /* set default window size */
-	gtk_window_set_default_size(GTK_WINDOW(plotter.window), 640, 480);
+    gtk_window_set_default_size(GTK_WINDOW(plotter.window), 640, 480);
 
     /* add drawing area to window */
-	gtk_container_add(GTK_CONTAINER(plotter.window), GTK_WIDGET(plotter.draw_area));
+    gtk_container_add(GTK_CONTAINER(plotter.window), GTK_WIDGET(plotter.draw_area));
 
     /* connect the draw signal to the drawing area */
-	g_signal_connect(GTK_DRAWING_AREA(plotter.draw_area), "draw", G_CALLBACK(on_draw_call), NULL);
+    g_signal_connect(GTK_DRAWING_AREA(plotter.draw_area), "draw", G_CALLBACK(on_draw_call), NULL);
 
     /* show all window parents */
-	gtk_widget_show_all(GTK_WIDGET(plotter.window));
+    gtk_widget_show_all(GTK_WIDGET(plotter.window));
 }
 
 gboolean on_draw_call(GtkWidget *draw_area, cairo_t *cr, gpointer null) {
     UNUSED(null);
-	int X = gtk_widget_get_allocated_width(draw_area);
-	int Y = gtk_widget_get_allocated_height(draw_area);
+    int X = gtk_widget_get_allocated_width(draw_area);
+    int Y = gtk_widget_get_allocated_height(draw_area);
 
-	double box_left = 75;
+    double box_left = 75;
     double box_right = X - 75;
-	double box_top = 25;
+    double box_top = 25;
     double box_bot = Y - 25;
 
-	double xmin = plotter.range[0];
-	double xmax = plotter.range[1];
+    double xmin = plotter.range[0];
+    double xmax = plotter.range[1];
 
     double ymin = plotter.domain[0];
     double ymax = plotter.domain[1];
@@ -265,7 +265,7 @@ void draw_labels(cairo_t *cr, packed_data_t *data) {
     cairo_select_font_face(cr, "Helvetica", CAIRO_FONT_SLANT_ITALIC, CAIRO_FONT_WEIGHT_NORMAL);
     cairo_set_font_size(cr, 12.0);
     for (int i = 0; i < 7; ++i) {
-        g_snprintf(str_num, 32, "%.6g", data->x_min + dgrid_x * i);
+        g_snprintf(str_num, sizeof(str_num), "%.6g", data->x_min + dgrid_x * i);
         cairo_save(cr);
         cairo_text_extents(cr, str_num, &extents);
         cairo_move_to(
@@ -278,7 +278,7 @@ void draw_labels(cairo_t *cr, packed_data_t *data) {
 
     /* label axis x from left */
     for (int i = 0; i < 7; ++i) {
-        g_snprintf(str_num, 32, "%.6g", data->y_max - i * dgrid_y);
+        g_snprintf(str_num, sizeof(str_num), "%.6g", data->y_max - i * dgrid_y);
         cairo_save(cr);
         cairo_text_extents(cr, str_num, &extents);
         cairo_move_to(

@@ -14,7 +14,7 @@ void to_unary(lexeme_t *l);
 
 bool is_right_associative(lexeme_t *l);
 
-int get_priority(enum operator_type oper);
+int get_priority(lexeme_t l);
 
 /***************************
  * FUNCTION IMPLEMENTATION *
@@ -27,11 +27,11 @@ bool is_valid_tokens(lexemes_t *ls) {
     bool has_incorrect_chunk;
     for (int i = 0; i < ls->count_lexemes; ++i) {
         l = get_lexem_at(ls, i);
-        if (is_open_bracket(&l)) {
+        if (is_open_bracket_type(l)) {
             brackets_dif++;
-        } else if (is_close_bracket(&l)) {
+        } else if (is_close_bracket_type(l)) {
             brackets_dif--;
-        } else if (l.type == type_incorrect) {
+        } else if (is_incorrect_type(l)) {
             has_incorrect_chunk = false;
         }
     }
@@ -41,8 +41,8 @@ bool is_valid_tokens(lexemes_t *ls) {
         pl = get_lexem_at(ls, 0);
         for (int i = 1; i < ls->count_lexemes && is_correct == true; ++i) {
             l = get_lexem_at(ls, i);
-            if (is_operator(&pl)
-                && (!is_number(&l) && !is_function(&l) && !is_open_bracket(&l)) && !is_operator(&l)) {
+            if ((is_operator_type(pl) || is_unary_type(l))
+                && (!is_number_type(l) &&!is_x_var_type(l) && !is_function_type(l) && !is_open_bracket_type(l)) && !(is_operator_type(l) || !is_unary_type(l))) {
                 is_correct = false;
             }
             pl = l;
@@ -63,42 +63,42 @@ lexemes_t *form_rpn(lexemes_t *ls) {
     for (int i = 0; (out_lexeme != NULL) && (i < ls->count_lexemes); ++i) {
         l = get_lexem_at(ls, i);
         // if number
-        if (is_number(&l)) {
+        if (is_number_type(l) || is_x_var_type(l)) {
             push_lexem(&out_lexeme, l);
             is_unary = false;
         // if function
-        } else if (is_function(&l)) {
+        } else if (is_function_type(l)) {
             push(&stack, l);
             is_unary = false;
         // if open bracket
-        } else if (is_open_bracket(&l)) {
+        } else if (is_open_bracket_type(l)) {
             push(&stack, l);
             is_unary = true;
         // if close bracket
-        } else if (is_close_bracket(&l)) {
-            while (!is_empty(stack) && (peek(stack).type != type_open_bracket)) {
+        } else if (is_close_bracket_type(l)) {
+            while (!is_empty(stack) && !is_open_bracket_type(peek(stack))) {
                 push_lexem(&out_lexeme, pop(stack));
             }
             if (is_empty(stack)) {
                 destroy_lexemes_struct(&out_lexeme);
             }
             pop(stack);
-            if (!is_empty(stack) && peek(stack).type == type_function) {
+            if (!is_empty(stack) && is_function_type(peek(stack))) {
                 push_lexem(&out_lexeme, pop(stack));
             }
             is_unary = false;
         // if operator
-        } else if (is_operator(&l)) {
+        } else if (is_operator_type(l) || is_unary_type(l)) {
             if (is_unary) {
                 to_unary(&l);
             }
             while (
                 !is_empty(stack)
-                && peek(stack).type == type_operator
+                && is_operator_type(peek(stack))
                 && ((!is_right_associative(&l)
-                        && get_priority(peek(stack).oper) >= get_priority(l.oper))
+                        && get_priority(peek(stack)) >= get_priority(l))
                     || (is_right_associative(&l)
-                        && get_priority(peek(stack).oper) > get_priority(l.oper)))) {
+                        && get_priority(peek(stack)) > get_priority(l)))) {
                 push_lexem(&out_lexeme, pop(stack));
             }
             push(&stack, l);
@@ -111,7 +111,7 @@ lexemes_t *form_rpn(lexemes_t *ls) {
 
     while (!is_empty(stack) && out_lexeme != NULL) {
         l = pop(stack);
-        if (!is_operator(&l) && !is_function(&l)) {
+        if (!(is_operator_type(l) || is_unary_type(l)) && !is_function_type(l)) {
             destroy_lexemes_struct(&out_lexeme);
         }
         push_lexem(&out_lexeme, l);
@@ -122,7 +122,7 @@ lexemes_t *form_rpn(lexemes_t *ls) {
 }
 
 void to_unary(lexeme_t *l) {
-    if (l->type == type_operator) {
+    if (is_operator_type(*l)) {
         if (l->oper == operator_add) {
             l->type = type_unary;
             l->oper = operator_unary_add;
@@ -135,7 +135,7 @@ void to_unary(lexeme_t *l) {
 
 bool is_right_associative(lexeme_t *l) {
     bool is_right_associative;
-    if (l->type == type_unary || l->oper == operator_pow) {
+    if (is_unary_type(*l) || l->oper == operator_pow) {
         is_right_associative = true;
     } else {
         is_right_associative = false;
@@ -143,8 +143,9 @@ bool is_right_associative(lexeme_t *l) {
     return is_right_associative;
 }
 
-int get_priority(enum operator_type oper) {
+int get_priority(lexeme_t l) {
     int priority;
+    enum operator_type oper = l.oper;
     if (oper >= operator_add && oper <= operator_sub) {
         priority = 1;
     } else if (oper >= operator_mul && oper <= operator_mod) {

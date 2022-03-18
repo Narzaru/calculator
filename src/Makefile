@@ -6,6 +6,12 @@ math_parser.a:
 	make -C ./math_parser/ math_parser.a
 	cp ./math_parser/math_parser.a .
 
+linter:
+	cp ../materials/linters/CPPLINT.cfg .
+	find . -name "*.c" -exec python3 ../materials/linters/cpplint.py {} \;
+	find . -name "*.h" -exec python3 ../materials/linters/cpplint.py {} \;
+	rm -f CPPLINT.cfg
+
 libstack.a:
 	make -C ./stack/ libstack.a
 	cp ./stack/libstack.a .

@@ -15,9 +15,9 @@ lexeme_t calculate_rpn(lexemes_t *ls) {
 
     for (int i = 0; i < ls->count_lexemes; ++i) {
         l = get_lexem_at(ls, i);
-        if (is_number(&l)) {
+        if (is_number_type(l) || is_x_var_type(l)) {
             push(&stack, l);
-        } else if (is_operator(&l) || is_function(&l)) {
+        } else if (is_operator_type(l) || is_unary_type(l) || is_function_type(l)) {
             push(&stack, calc(stack, l));
         }
     }

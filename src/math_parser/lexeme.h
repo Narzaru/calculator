@@ -71,6 +71,8 @@ typedef struct lexemes lexemes_t;
 /************************
  * FUNCTION DECLARATION *
  ************************/
+
+/* functions for working with lexemes_t type */
 lexemes_t *new_lexemes_struct(void);
 
 void destroy_lexemes_struct(lexemes_t **ls);
@@ -81,22 +83,23 @@ status_t extend_lexemes_struct(lexemes_t **ls);
 
 lexeme_t get_lexem_at(lexemes_t *ls, long int at);
 
-// bool is_incorrect(lexeme_t l);
+/* functions for type validation */
+bool is_incorrect_type(lexeme_t l);
 
-bool is_number(lexeme_t *l);
+bool is_number_type(lexeme_t l);
 
-bool is_open_bracket(lexeme_t *l);
+bool is_open_bracket_type(lexeme_t l);
 
-bool is_function(lexeme_t *l);
+bool is_function_type(lexeme_t l);
 
-// bool is_delimiter(lexeme_t l);
+bool is_delimiter_type(lexeme_t l);
 
-bool is_operator(lexeme_t *l);
+bool is_operator_type(lexeme_t l);
 
-bool is_unary(lexeme_t *l);
+bool is_unary_type(lexeme_t l);
 
-bool is_close_bracket(lexeme_t *l);
+bool is_close_bracket_type(lexeme_t l);
 
-// bool is_x_var(lexeme_t l);
+bool is_x_var_type(lexeme_t l);
 
 #endif  /* SRC_MATH_PARSER_LEXEME_H_ */

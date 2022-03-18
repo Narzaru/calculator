@@ -28,6 +28,7 @@ void push_lexem(lexemes_t **ls, lexeme_t l) {
     if ((*ls)->count_lexemes >= (*ls)->capacity) {
         extend_lexemes_struct(ls);
     }
+    /* ls.all[ls.count_lexemes] = l */
     (*ls)->all[(*ls)->count_lexemes] = l;
     (*ls)->count_lexemes++;
 }
@@ -53,9 +54,19 @@ lexeme_t get_lexem_at(lexemes_t *ls, long int at) {
     return ls->all[at];
 }
 
-bool is_number(lexeme_t *l) {
+bool is_incorrect_type(lexeme_t l) {
+    bool is_incorrect;
+    if (l.type == type_incorrect) {
+        is_incorrect = true;
+    } else {
+        is_incorrect = false;
+    }
+    return is_incorrect;
+}
+
+bool is_number_type(lexeme_t l) {
     bool is_number;
-    if (l->type == type_x_var || l->type == type_number) {
+    if (l.type == type_number) {
         is_number = true;
     } else {
         is_number = false;
@@ -63,19 +74,9 @@ bool is_number(lexeme_t *l) {
     return is_number;
 }
 
-bool is_function(lexeme_t *l) {
-    bool is_function;
-    if (l->type == type_function) {
-        is_function = true;
-    } else {
-        is_function = false;
-    }
-    return is_function;
-}
-
-bool is_open_bracket(lexeme_t *l) {
+bool is_open_bracket_type(lexeme_t l) {
     bool is_open_bracket;
-    if (l->type == type_open_bracket) {
+    if (l.type == type_open_bracket) {
         is_open_bracket = true;
     } else {
         is_open_bracket = false;
@@ -83,19 +84,29 @@ bool is_open_bracket(lexeme_t *l) {
     return is_open_bracket;
 }
 
-bool is_close_bracket(lexeme_t *l) {
-    bool is_close_bracket;
-    if (l->type == type_close_bracket) {
-        is_close_bracket = true;
+bool is_function_type(lexeme_t l) {
+    bool is_function;
+    if (l.type == type_function) {
+        is_function = true;
     } else {
-        is_close_bracket = false;
+        is_function = false;
     }
-    return is_close_bracket;
+    return is_function;
 }
 
-bool is_operator(lexeme_t *l) {
+bool is_delimiter_type(lexeme_t l) {
+    bool is_delimiter;
+    if (l.type == type_delimiter) {
+        is_delimiter = true;
+    } else {
+        is_delimiter = false;
+    }
+    return is_delimiter;
+}
+
+bool is_operator_type(lexeme_t l) {
     bool is_operator;
-    if (l->type == type_operator || l->type == type_unary) {
+    if (l.type == type_operator || l.type == type_unary) {
         is_operator = true;
     } else {
         is_operator = false;
@@ -103,9 +114,9 @@ bool is_operator(lexeme_t *l) {
     return is_operator;
 }
 
-bool is_unary(lexeme_t *l) {
+bool is_unary_type(lexeme_t l) {
     bool is_unary;
-    if (l->type == type_unary) {
+    if (l.type == type_unary) {
         is_unary = true;
     } else {
         is_unary = false;
@@ -113,23 +124,22 @@ bool is_unary(lexeme_t *l) {
     return is_unary;
 }
 
-bool is_digits(lexeme_t *l) {
-    bool is_digits;
-    if (l->type == type_number) {
-        is_digits = true;
+bool is_close_bracket_type(lexeme_t l) {
+    bool is_close_bracket;
+    if (l.type == type_close_bracket) {
+        is_close_bracket = true;
     } else {
-        is_digits = false;
+        is_close_bracket = false;
     }
-    return is_digits;
+    return is_close_bracket;
 }
 
-bool is_var(lexeme_t *l) {
+bool is_x_var_type(lexeme_t l) {
     bool is_var;
-    if (l->type == type_x_var) {
+    if (l.type == type_x_var) {
         is_var = true;
     } else {
         is_var = false;
     }
     return is_var;
 }
-
