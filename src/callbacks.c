@@ -7,6 +7,7 @@
 
 void on_botton_plote_clicked(GtkButton *b, gpointer io_field) {
     UNUSED(b);
+    UNUSED(io_field);
     /* builder init */
     GtkBuilder *builder;
     GtkWindow *window;
@@ -57,40 +58,40 @@ void on_plote_graph(GtkButton *b, GtkGrid *grid) {
     GtkWidget *widget;
     char str[256];
 
-    widget = find_child(grid, "id@gtk_xmin");
+    widget = find_child(GTK_WIDGET(grid), "id@gtk_xmin");
     g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
     x_min = strtod(str, &endptr);
     g_print("%s %p %p %d\n", str, str, endptr, *endptr);
-    if (endptr == str || *endptr != NULL) {
-        gtk_entry_set_text(widget, "error");
+    if (endptr == str || *endptr != '\0') {
+        gtk_entry_set_text(GTK_ENTRY(widget), "error");
         return;
     }
 
-    widget = find_child(grid, "id@gtk_xmax");
+    widget = find_child(GTK_WIDGET(grid), "id@gtk_xmax");
     g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
     x_max = strtod(str, &endptr);
-    if (endptr == str || *endptr != NULL) {
-        gtk_entry_set_text(widget, "error");
+    if (endptr == str || *endptr != '\0') {
+        gtk_entry_set_text(GTK_ENTRY(widget), "error");
         return;
     }
 
-    widget = find_child(grid, "id@gtk_ymin");
+    widget = find_child(GTK_WIDGET(grid), "id@gtk_ymin");
     g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
     y_min = strtod(str, &endptr);
-    if (endptr == str || *endptr != NULL) {
-        gtk_entry_set_text(widget, "error");
+    if (endptr == str || *endptr != '\0') {
+        gtk_entry_set_text(GTK_ENTRY(widget), "error");
         return;
     }
 
-    widget = find_child(grid, "id@gtk_ymax");
+    widget = find_child(GTK_WIDGET(grid), "id@gtk_ymax");
     g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
     y_max = strtod(str, &endptr);
-    if (endptr == str || *endptr != NULL) {
-        gtk_entry_set_text(widget, "error");
+    if (endptr == str || *endptr != '\0') {
+        gtk_entry_set_text(GTK_ENTRY(widget), "error");
         return;
     }
 
-    widget = find_child(grid, "id@gtk_entry");
+    widget = find_child(GTK_WIDGET(grid), "id@gtk_entry");
     g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
 
 
@@ -111,10 +112,10 @@ void on_plote_graph(GtkButton *b, GtkGrid *grid) {
             plotter_set_function(x, y, count_of_dots);
             plotter_draw();
         } else {
-            gtk_entry_set_text(widget, "error");
+            gtk_entry_set_text(GTK_ENTRY(widget), "error");
         }
     } else {
-        gtk_entry_set_text(widget, "error");
+        gtk_entry_set_text(GTK_ENTRY(widget), "error");
     }
     destroy_lexemes_struct(&tokens);
 }
