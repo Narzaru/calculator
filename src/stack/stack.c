@@ -74,7 +74,8 @@ status_t extend_stack(stack_t **stack) {
     status_t status;
 
     (*stack)->capacity *= 2;
-    stack_t *temp = (stack_t *)realloc(*stack, sizeof(stack_t) + ((*stack)->capacity * sizeof(STACK_VALUE_TYPE)));
+    stack_t *temp = (stack_t *)realloc(
+        *stack, sizeof(stack_t) + ((*stack)->capacity * sizeof(STACK_VALUE_TYPE)));
 
     if (temp == NULL) {
         fprintf(stderr, "allocation error");

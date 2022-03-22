@@ -42,7 +42,11 @@ bool is_valid_tokens(lexemes_t *ls) {
         for (int i = 1; i < ls->count_lexemes && is_correct == true; ++i) {
             l = get_lexeme_at(ls, i);
             if ((is_operator_type(pl) || is_unary_type(l))
-                && (!is_number_type(l) &&!is_x_var_type(l) && !is_function_type(l) && !is_open_bracket_type(l)) && !(is_operator_type(l) || !is_unary_type(l))) {
+                && (!is_number_type(l)
+                    && !is_x_var_type(l)
+                    && !is_function_type(l)
+                    && !is_open_bracket_type(l))
+                    && !(is_operator_type(l) || !is_unary_type(l))) {
                 is_correct = false;
             }
             pl = l;

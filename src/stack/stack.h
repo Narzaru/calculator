@@ -1,5 +1,5 @@
-#ifndef SRC_STACK_H_
-#define SRC_STACK_H_
+#ifndef SRC_STACK_STACK_H_
+#define SRC_STACK_STACK_H_
 
 #include <sys/types.h>
 #include <stdbool.h>
@@ -19,4 +19,4 @@ STACK_VALUE_TYPE pop(stack_t *stack);
 
 STACK_VALUE_TYPE peek(stack_t *stack);
 
-#endif  /* SRC_STACK_H_ */
+#endif  /* SRC_STACK_STACK_H_ */

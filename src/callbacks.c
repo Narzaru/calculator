@@ -31,8 +31,7 @@ GtkWidget* find_child(GtkWidget* parent, const gchar* name) {
     if (GTK_IS_CONTAINER(parent))
         children = gtk_container_get_children(GTK_CONTAINER(parent));
 
-    while (children != NULL)
-    {
+    while (children != NULL) {
         GtkWidget* widget = find_child(children->data, name);
 
         if (widget != NULL)
@@ -59,7 +58,7 @@ void on_plote_graph(GtkButton *b, GtkGrid *grid) {
     char str[256];
 
     widget = find_child(grid, "id@gtk_xmin");
-    strcpy(str, gtk_entry_get_text(GTK_ENTRY(widget)));
+    g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
     x_min = strtod(str, &endptr);
     g_print("%s %p %p %d\n", str, str, endptr, *endptr);
     if (endptr == str || *endptr != NULL) {
@@ -68,7 +67,7 @@ void on_plote_graph(GtkButton *b, GtkGrid *grid) {
     }
 
     widget = find_child(grid, "id@gtk_xmax");
-    strcpy(str, gtk_entry_get_text(GTK_ENTRY(widget)));
+    g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
     x_max = strtod(str, &endptr);
     if (endptr == str || *endptr != NULL) {
         gtk_entry_set_text(widget, "error");
@@ -76,7 +75,7 @@ void on_plote_graph(GtkButton *b, GtkGrid *grid) {
     }
 
     widget = find_child(grid, "id@gtk_ymin");
-    strcpy(str, gtk_entry_get_text(widget));
+    g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
     y_min = strtod(str, &endptr);
     if (endptr == str || *endptr != NULL) {
         gtk_entry_set_text(widget, "error");
@@ -84,7 +83,7 @@ void on_plote_graph(GtkButton *b, GtkGrid *grid) {
     }
 
     widget = find_child(grid, "id@gtk_ymax");
-    strcpy(str, gtk_entry_get_text(widget));
+    g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
     y_max = strtod(str, &endptr);
     if (endptr == str || *endptr != NULL) {
         gtk_entry_set_text(widget, "error");
@@ -92,7 +91,7 @@ void on_plote_graph(GtkButton *b, GtkGrid *grid) {
     }
 
     widget = find_child(grid, "id@gtk_entry");
-    strcpy(str, gtk_entry_get_text(widget));
+    g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
 
 
     lexemes_t *rpn;
@@ -126,17 +125,17 @@ void on_press_enter(GtkEntry *entry, gpointer null) {
     GtkEntryBuffer *buffer = gtk_entry_get_buffer(entry);
     const gchar *str = gtk_entry_buffer_get_text(buffer);
 
-    char strout[255];
+    char strout[256];
 
     if (str != NULL) {
-        strcpy(strout, str);
+        g_snprintf(strout, sizeof(str), "%s", str);
         lexemes_t *tokens = form_tokens(strout);
 
         if (is_valid_tokens(tokens)) {
             lexemes_t *rpn = form_rpn(tokens);
             if (rpn != NULL) {
                 lexeme_t res = calculate_rpn(rpn, NULL);
-                snprintf(strout, 255, "%-f", res.value);
+                g_snprintf(strout, sizeof(strout), "%-f", res.value);
                 gtk_entry_buffer_set_text(buffer, strout, strlen(strout));
                 destroy_lexemes_struct(&rpn);
             } else {
@@ -377,7 +376,7 @@ void on_botton_DOT_clicked(GtkButton *b, gpointer io_field) {
         gtk_editable_get_position(GTK_EDITABLE(io_field)) + 1);
 }
 
-void on_botton_SUB_clicked (GtkButton *b, gpointer io_field) {
+void on_botton_SUB_clicked(GtkButton *b, gpointer io_field) {
     UNUSED(b);
     gint cursor_position = gtk_editable_get_position(GTK_EDITABLE(io_field));
     gtk_editable_insert_text(GTK_EDITABLE(io_field), "-", 1, &cursor_position);
@@ -386,7 +385,7 @@ void on_botton_SUB_clicked (GtkButton *b, gpointer io_field) {
         gtk_editable_get_position(GTK_EDITABLE(io_field)) + 1);
 }
 
-void on_botton_ADD_clicked (GtkButton *b, gpointer io_field) {
+void on_botton_ADD_clicked(GtkButton *b, gpointer io_field) {
     UNUSED(b);
     gint cursor_position = gtk_editable_get_position(GTK_EDITABLE(io_field));
     gtk_editable_insert_text(GTK_EDITABLE(io_field), "+", 1, &cursor_position);
@@ -395,7 +394,7 @@ void on_botton_ADD_clicked (GtkButton *b, gpointer io_field) {
         gtk_editable_get_position(GTK_EDITABLE(io_field)) + 1);
 }
 
-void on_botton_MUL_clicked (GtkButton *b, gpointer io_field) {
+void on_botton_MUL_clicked(GtkButton *b, gpointer io_field) {
     UNUSED(b);
     gint cursor_position = gtk_editable_get_position(GTK_EDITABLE(io_field));
     gtk_editable_insert_text(GTK_EDITABLE(io_field), "*", 1, &cursor_position);
@@ -404,7 +403,7 @@ void on_botton_MUL_clicked (GtkButton *b, gpointer io_field) {
         gtk_editable_get_position(GTK_EDITABLE(io_field)) + 1);
 }
 
-void on_botton_DIV_clicked (GtkButton *b, gpointer io_field) {
+void on_botton_DIV_clicked(GtkButton *b, gpointer io_field) {
     UNUSED(b);
     gint cursor_position = gtk_editable_get_position(GTK_EDITABLE(io_field));
     gtk_editable_insert_text(GTK_EDITABLE(io_field), "/", 1, &cursor_position);

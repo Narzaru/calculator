@@ -51,7 +51,6 @@ bool is_operand(lexeme_t l) {
         is_operand = false;
     }
     return is_operand;
-
 }
 
 bool is_command(lexeme_t l) {
