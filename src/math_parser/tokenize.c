@@ -165,7 +165,7 @@ enum lexeme_type get_lexeme_type(char *token) {
 bool is_token_a_number(char *token) {
     bool is_number = true;
     for (int i = 0; token[i] != '\0'; ++i) {
-        if ((token[i] > '9' || token[i] < '0') && token[i] != '.' && token[i]) {
+        if ((token[i] > '9' || token[i] < '0') && token[i] != '.' && token[i] != ',' && token[i]) {
             is_number = false;
         }
     }
@@ -222,12 +222,14 @@ enum operator_type get_lexeme_operation(enum lexeme_type type, char *token) {
 
 enum function_type get_lexeme_function(enum lexeme_type type, char *token) {
     enum function_type function;
+    char *p_pos;
 
     if (type == type_function) {
         int i;
 
         for (i = 1; i < TYPE_ROWS; ++i) {
-            if (strstr(token, types[i]) != NULL) {
+            p_pos = strstr(token, types[i]);
+            if (p_pos != NULL && p_pos == token) {
                 break;
             }
         }
@@ -283,6 +285,10 @@ double get_lexeme_value(enum lexeme_type type, char *token) {
     double result;
     if (type == type_number) {
         char *p_char;
+        char *dot_pos = strchr(token, '.');
+        if (dot_pos != NULL) {
+            *dot_pos = ',';
+        }
         result = strtod(token, &p_char);
         /* if all string is converted */
         if (p_char != NULL) {

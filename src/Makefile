@@ -17,7 +17,7 @@ libstack.a:
 	cp ./stack/libstack.a .
 
 calculator.out: clean math_parser.a libstack.a
-	$(CC) `pkg-config --cflags gtk+-3.0` main.c plotter/plotter.c callbacks.c -o $@ $(ERROR_FLAGS) $(DEBUG_FLAGS) `pkg-config --libs gtk+-3.0` -rdynamic -lm -Imath_parser/ -I. math_parser.a libstack.a
+	$(CC) `pkg-config --cflags gtk+-3.0` main.c plotter/plotter.c callbacks.c -o $@ $(ERROR_FLAGS) $(DEBUG_FLAGS) `pkg-config --libs gtk+-3.0` -rdynamic -lm -Imath_parser/ -I. -Iplotter/ math_parser.a libstack.a
 	./$@
 
 clean:

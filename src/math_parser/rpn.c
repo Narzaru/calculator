@@ -26,7 +26,7 @@ bool is_valid_tokens(lexemes_t *ls) {
     bool is_correct;
     bool has_incorrect_chunk;
     for (int i = 0; i < ls->count_lexemes; ++i) {
-        l = get_lexem_at(ls, i);
+        l = get_lexeme_at(ls, i);
         if (is_open_bracket_type(l)) {
             brackets_dif++;
         } else if (is_close_bracket_type(l)) {
@@ -38,9 +38,9 @@ bool is_valid_tokens(lexemes_t *ls) {
 
     if (brackets_dif == 0) {
         is_correct = true;
-        pl = get_lexem_at(ls, 0);
+        pl = get_lexeme_at(ls, 0);
         for (int i = 1; i < ls->count_lexemes && is_correct == true; ++i) {
-            l = get_lexem_at(ls, i);
+            l = get_lexeme_at(ls, i);
             if ((is_operator_type(pl) || is_unary_type(l))
                 && (!is_number_type(l) &&!is_x_var_type(l) && !is_function_type(l) && !is_open_bracket_type(l)) && !(is_operator_type(l) || !is_unary_type(l))) {
                 is_correct = false;
@@ -61,7 +61,7 @@ lexemes_t *form_rpn(lexemes_t *ls) {
     lexeme_t l;
 
     for (int i = 0; (out_lexeme != NULL) && (i < ls->count_lexemes); ++i) {
-        l = get_lexem_at(ls, i);
+        l = get_lexeme_at(ls, i);
         // if number
         if (is_number_type(l) || is_x_var_type(l)) {
             push_lexem(&out_lexeme, l);

@@ -77,11 +77,13 @@ lexemes_t *new_lexemes_struct(void);
 
 void destroy_lexemes_struct(lexemes_t **ls);
 
-void push_lexem(lexemes_t **ls, lexeme_t l);
+status_t push_lexem(lexemes_t **ls, lexeme_t l);
 
 status_t extend_lexemes_struct(lexemes_t **ls);
 
-lexeme_t get_lexem_at(lexemes_t *ls, long int at);
+lexeme_t get_lexeme_at(lexemes_t *ls, long int at);
+
+void set_lexeme_at(lexemes_t *ls, lexeme_t l, long int at);
 
 /* functions for type validation */
 bool is_incorrect_type(lexeme_t l);

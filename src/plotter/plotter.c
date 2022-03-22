@@ -179,7 +179,7 @@ void draw_function(cairo_t *cr, packed_data_t *data) {
     double x_start = -x_stretching_koef * data->x_min + data->box_left;
     double y_start = -y_stretching_koef * data->y_min + data->box_bot;
 
-    cut_tops(plotter.y, plotter.count_of_dots, data->y_min, data->x_max);
+    cut_tops(plotter.y, plotter.count_of_dots, data->y_min, data->y_max);
 
     cairo_set_source_rgb(cr, 1, 0, 0);
     cairo_set_line_width(cr, 2);

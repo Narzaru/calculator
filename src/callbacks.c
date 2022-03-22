@@ -1,8 +1,124 @@
 #include <math.h>
 #include <gtk/gtk.h>
 #include "calculator.h"
+#include "plotter.h"
 
 #define UNUSED(expr) (void)(expr)
+
+void on_botton_plote_clicked(GtkButton *b, gpointer io_field) {
+    UNUSED(b);
+    /* builder init */
+    GtkBuilder *builder;
+    GtkWindow *window;
+
+    builder = gtk_builder_new_from_file("./ui/plotter.ui");
+
+    /* get window object from the builder */
+    window = GTK_WINDOW(gtk_builder_get_object(builder, "id@gtk_window"));
+
+    /* enable all signals from builder */
+    gtk_builder_connect_signals(builder, NULL);
+
+    /* show window */
+    gtk_widget_show_all(GTK_WIDGET(window));
+}
+
+GtkWidget* find_child(GtkWidget* parent, const gchar* name) {
+    if (g_strcmp0(gtk_widget_get_name(parent), name) == 0)
+        return parent;
+
+    GList* children = NULL;
+    if (GTK_IS_CONTAINER(parent))
+        children = gtk_container_get_children(GTK_CONTAINER(parent));
+
+    while (children != NULL)
+    {
+        GtkWidget* widget = find_child(children->data, name);
+
+        if (widget != NULL)
+            return widget;
+
+        children = children->next;
+    }
+
+    return NULL;
+}
+
+extern double *x;
+extern double *y;
+extern int count_of_dots;
+
+void on_plote_graph(GtkButton *b, GtkGrid *grid) {
+    UNUSED(b);
+    double x_max;
+    double x_min;
+    double y_max;
+    double y_min;
+    char *endptr;
+    GtkWidget *widget;
+    char str[256];
+
+    widget = find_child(grid, "id@gtk_xmin");
+    strcpy(str, gtk_entry_get_text(GTK_ENTRY(widget)));
+    x_min = strtod(str, &endptr);
+    g_print("%s %p %p %d\n", str, str, endptr, *endptr);
+    if (endptr == str || *endptr != NULL) {
+        gtk_entry_set_text(widget, "error");
+        return;
+    }
+
+    widget = find_child(grid, "id@gtk_xmax");
+    strcpy(str, gtk_entry_get_text(GTK_ENTRY(widget)));
+    x_max = strtod(str, &endptr);
+    if (endptr == str || *endptr != NULL) {
+        gtk_entry_set_text(widget, "error");
+        return;
+    }
+
+    widget = find_child(grid, "id@gtk_ymin");
+    strcpy(str, gtk_entry_get_text(widget));
+    y_min = strtod(str, &endptr);
+    if (endptr == str || *endptr != NULL) {
+        gtk_entry_set_text(widget, "error");
+        return;
+    }
+
+    widget = find_child(grid, "id@gtk_ymax");
+    strcpy(str, gtk_entry_get_text(widget));
+    y_max = strtod(str, &endptr);
+    if (endptr == str || *endptr != NULL) {
+        gtk_entry_set_text(widget, "error");
+        return;
+    }
+
+    widget = find_child(grid, "id@gtk_entry");
+    strcpy(str, gtk_entry_get_text(widget));
+
+
+    lexemes_t *rpn;
+    lexemes_t *tokens = form_tokens(str);
+
+    if (is_valid_tokens(tokens) && x_max > x_min && y_max > x_min) {
+        rpn = form_rpn(tokens);
+        if (rpn != NULL) {
+            linspace(x, x_min, x_max, count_of_dots);
+            for (int i = 0; i < count_of_dots; ++i) {
+                y[i] = calculate_rpn(rpn, &(x[i])).value;
+            }
+            destroy_lexemes_struct(&rpn);
+
+            plotter_set_domain(y_min, y_max);
+            plotter_set_range(x_min, x_max);
+            plotter_set_function(x, y, count_of_dots);
+            plotter_draw();
+        } else {
+            gtk_entry_set_text(widget, "error");
+        }
+    } else {
+        gtk_entry_set_text(widget, "error");
+    }
+    destroy_lexemes_struct(&tokens);
+}
 
 void on_press_enter(GtkEntry *entry, gpointer null) {
     UNUSED(null);
@@ -19,7 +135,7 @@ void on_press_enter(GtkEntry *entry, gpointer null) {
         if (is_valid_tokens(tokens)) {
             lexemes_t *rpn = form_rpn(tokens);
             if (rpn != NULL) {
-                lexeme_t res = calculate_rpn(rpn);
+                lexeme_t res = calculate_rpn(rpn, NULL);
                 snprintf(strout, 255, "%-f", res.value);
                 gtk_entry_buffer_set_text(buffer, strout, strlen(strout));
                 destroy_lexemes_struct(&rpn);

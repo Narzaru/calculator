@@ -3,7 +3,6 @@
 #include <malloc.h>
 #include <math.h>
 
-#include "calculator_type.h"
 #include "calculator.h"
 
 void print(lexemes_t *ls);
@@ -14,13 +13,13 @@ void print_num(double num);
 
 int main(void) {
     // char a[] = "sin(3+5)*8-cos(sin(ln(15)*8)-6)";
-    char a[] = "5.5*5";
+    char a[] = "acos(x)";
     lexemes_t *tokens = form_tokens(a);
     print(tokens);
     if (is_valid_tokens(tokens)) {
         lexemes_t *rpn = form_rpn(tokens);
         if (rpn != NULL) {
-            lexeme_t res = calculate_rpn(rpn);
+            lexeme_t res = calculate_rpn(rpn, NULL);
             print(rpn);
             printf("%.12g", res.value);
             destroy_lexemes_struct(&rpn);
@@ -42,13 +41,13 @@ void print(lexemes_t *ls) {
         printf("----------------------------------------------------------------\n");
         for (int i = 0; i < ls->count_lexemes; ++i) {
             printf("| %-4d | ", i);
-            print_type(get_lexem_at(ls, i).type);
+            print_type(get_lexeme_at(ls, i).type);
             printf(" | ");
-            print_oper(get_lexem_at(ls, i).oper);
+            print_oper(get_lexeme_at(ls, i).oper);
             printf(" | ");
-            print_func(get_lexem_at(ls, i).func);
+            print_func(get_lexeme_at(ls, i).func);
             printf(" | ");
-            print_num(get_lexem_at(ls, i).value);
+            print_num(get_lexeme_at(ls, i).value);
             printf(" |");
             printf("\n");
         }

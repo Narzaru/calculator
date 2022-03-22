@@ -24,13 +24,18 @@ void destroy_lexemes_struct(lexemes_t **ls) {
     *ls = NULL;
 }
 
-void push_lexem(lexemes_t **ls, lexeme_t l) {
+status_t push_lexem(lexemes_t **ls, lexeme_t l) {
+    status_t status;
     if ((*ls)->count_lexemes >= (*ls)->capacity) {
-        extend_lexemes_struct(ls);
+        status = extend_lexemes_struct(ls);
+    } else {
+        status = OK;
     }
-    /* ls.all[ls.count_lexemes] = l */
-    (*ls)->all[(*ls)->count_lexemes] = l;
-    (*ls)->count_lexemes++;
+    if (status == OK) {
+        (*ls)->all[(*ls)->count_lexemes] = l;
+        (*ls)->count_lexemes++;
+    }
+    return status;
 }
 
 status_t extend_lexemes_struct(lexemes_t **ls) {
@@ -50,8 +55,12 @@ status_t extend_lexemes_struct(lexemes_t **ls) {
     return status;
 }
 
-lexeme_t get_lexem_at(lexemes_t *ls, long int at) {
+lexeme_t get_lexeme_at(lexemes_t *ls, long int at) {
     return ls->all[at];
+}
+
+void set_lexeme_at(lexemes_t *ls, lexeme_t l, long int at) {
+    ls->all[at] = l;
 }
 
 bool is_incorrect_type(lexeme_t l) {
