@@ -1,13 +1,17 @@
 #include <math.h>
 #include <gtk/gtk.h>
 #include "calculator.h"
-#include "plotter.h"
+#include "gtk_help.h"
+#include "simple_grapher/grapher.h"
 
-#define UNUSED(expr) (void)(expr)
+void on_plote_window_close(GtkWidget *widget, gpointer main_window) {
+    UNUSED(widget);
+    gtk_widget_set_sensitive(GTK_WIDGET(main_window), TRUE);
+}
 
-void on_botton_plote_clicked(GtkButton *b, gpointer io_field) {
+
+void on_botton_plote_clicked(GtkButton *b, gpointer main_window) {
     UNUSED(b);
-    UNUSED(io_field);
     /* builder init */
     GtkBuilder *builder;
     GtkWindow *window;
@@ -20,104 +24,12 @@ void on_botton_plote_clicked(GtkButton *b, gpointer io_field) {
     /* enable all signals from builder */
     gtk_builder_connect_signals(builder, NULL);
 
+    /* disable main window */
+    gtk_widget_set_sensitive(GTK_WIDGET(main_window), FALSE);
+    g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(on_plote_window_close), main_window);
+
     /* show window */
     gtk_widget_show_all(GTK_WIDGET(window));
-}
-
-GtkWidget* find_child(GtkWidget* parent, const gchar* name) {
-    if (g_strcmp0(gtk_widget_get_name(parent), name) == 0)
-        return parent;
-
-    GList* children = NULL;
-    if (GTK_IS_CONTAINER(parent))
-        children = gtk_container_get_children(GTK_CONTAINER(parent));
-
-    while (children != NULL) {
-        GtkWidget* widget = find_child(children->data, name);
-
-        if (widget != NULL)
-            return widget;
-
-        children = children->next;
-    }
-
-    return NULL;
-}
-
-extern double *x;
-extern double *y;
-extern int count_of_dots;
-
-void on_plote_graph(GtkButton *b, GtkGrid *grid) {
-    UNUSED(b);
-    double x_max;
-    double x_min;
-    double y_max;
-    double y_min;
-    char *endptr;
-    GtkWidget *widget;
-    char str[256];
-
-    widget = find_child(GTK_WIDGET(grid), "id@gtk_xmin");
-    g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
-    x_min = strtod(str, &endptr);
-    g_print("%s %p %p %d\n", str, str, endptr, *endptr);
-    if (endptr == str || *endptr != '\0') {
-        gtk_entry_set_text(GTK_ENTRY(widget), "error");
-        return;
-    }
-
-    widget = find_child(GTK_WIDGET(grid), "id@gtk_xmax");
-    g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
-    x_max = strtod(str, &endptr);
-    if (endptr == str || *endptr != '\0') {
-        gtk_entry_set_text(GTK_ENTRY(widget), "error");
-        return;
-    }
-
-    widget = find_child(GTK_WIDGET(grid), "id@gtk_ymin");
-    g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
-    y_min = strtod(str, &endptr);
-    if (endptr == str || *endptr != '\0') {
-        gtk_entry_set_text(GTK_ENTRY(widget), "error");
-        return;
-    }
-
-    widget = find_child(GTK_WIDGET(grid), "id@gtk_ymax");
-    g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
-    y_max = strtod(str, &endptr);
-    if (endptr == str || *endptr != '\0') {
-        gtk_entry_set_text(GTK_ENTRY(widget), "error");
-        return;
-    }
-
-    widget = find_child(GTK_WIDGET(grid), "id@gtk_entry");
-    g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
-
-
-    lexemes_t *rpn;
-    lexemes_t *tokens = form_tokens(str);
-
-    if (is_valid_tokens(tokens) && x_max > x_min && y_max > x_min) {
-        rpn = form_rpn(tokens);
-        if (rpn != NULL) {
-            linspace(x, x_min, x_max, count_of_dots);
-            for (int i = 0; i < count_of_dots; ++i) {
-                y[i] = calculate_rpn(rpn, &(x[i])).value;
-            }
-            destroy_lexemes_struct(&rpn);
-
-            plotter_set_domain(y_min, y_max);
-            plotter_set_range(x_min, x_max);
-            plotter_set_function(x, y, count_of_dots);
-            plotter_draw();
-        } else {
-            gtk_entry_set_text(GTK_ENTRY(widget), "error");
-        }
-    } else {
-        gtk_entry_set_text(GTK_ENTRY(widget), "error");
-    }
-    destroy_lexemes_struct(&tokens);
 }
 
 void on_press_enter(GtkEntry *entry, gpointer null) {
@@ -247,10 +159,10 @@ void on_botton_BRACKET_CLOSE_clicked(GtkButton *b, gpointer io_field) {
 void on_botton_SQRT_clicked(GtkButton *b, gpointer io_field) {
     UNUSED(b);
     gint cursor_position = gtk_editable_get_position(GTK_EDITABLE(io_field));
-    gtk_editable_insert_text(GTK_EDITABLE(io_field), "^", 1, &cursor_position);
-    gtk_editable_set_position(
-        GTK_EDITABLE(io_field),
-        gtk_editable_get_position(GTK_EDITABLE(io_field)) + 1);
+    gtk_editable_insert_text(GTK_EDITABLE(io_field), "sqrt()", 6, &cursor_position);
+    if (gtk_entry_get_text_length(io_field) != 255) {
+        gtk_editable_set_position(io_field, cursor_position - 1);
+    }
 }
 
 void on_botton_MOD_clicked(GtkButton *b, gpointer io_field) {

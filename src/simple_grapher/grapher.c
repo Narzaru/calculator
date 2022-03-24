@@ -1,7 +1,7 @@
 #include <math.h>
 #include <stdint.h>
 
-#include "plotter.h"
+#include "grapher.h"
 
 /* like a private things */
 
@@ -107,6 +107,10 @@ void plotter_set_domain(double y_min, double y_max) {
     plotter.domain[1] = y_max;
 }
 
+void plotter_signal_connect_on_close(void (*on_close)(GtkWidget *widget, gpointer pointer), gpointer data) {
+    g_signal_connect(GTK_WIDGET(plotter.draw_area), "destroy", G_CALLBACK(on_close), data);
+}
+
 void plotter_draw() {
     plotter.draw_area = GTK_DRAWING_AREA(gtk_drawing_area_new());
     plotter.window = GTK_WINDOW(gtk_window_new(GTK_WINDOW_TOPLEVEL));
@@ -157,16 +161,12 @@ gboolean on_draw_call(GtkWidget *draw_area, cairo_t *cr, gpointer null) {
         ymax
     };
 
-    /* draw function */
     draw_function(cr, &data);
 
-    /* draw box */
     draw_box(cr, &data);
 
-    /* draw axes */
     draw_axes(cr, &data);
 
-    /* draw labels */
     draw_labels(cr, &data);
 
     return TRUE;

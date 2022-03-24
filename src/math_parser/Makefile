@@ -29,7 +29,7 @@ $(BUILD_DIR)/%.o: %.c
 	$(CC) $(INCLUDE_FLAG) $< -c -o $@ $(ERROR_FLAGS) $(SANITIZE) -MD $(MATH_LIB)
 
 ## build libstack.a target from object files
-math_parser.a: $(OBJECT_FILES)
+libmathparser.a: $(OBJECT_FILES)
 	ar rc $@ $(OBJECT_FILES)
 	ar rc $@
 	ranlib $@
@@ -40,7 +40,7 @@ math_parser.a: $(OBJECT_FILES)
 
 re: clean libstack.a
 
-all: math_parser.a
+all: libmathparser.a
 
 clean:
 	find . -name "*.out" -delete
@@ -52,6 +52,6 @@ clear:
 	clear
 
 #### extra targets
-fprog: clear math_parser.a libstack.a
-	$(CC) $(INCLUDE_FLAG) $(ERROR_FLAGS) $(SANITIZE) main.c math_parser.a libstack.a -o main.out $(MATH_LIB)
+fprog: clear libmathparser.a libstack.a
+	$(CC) $(INCLUDE_FLAG) $(ERROR_FLAGS) $(SANITIZE) main.c libmathparser.a libstack.a -o main.out $(MATH_LIB)
 	./main.out

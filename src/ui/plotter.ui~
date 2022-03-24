@@ -197,7 +197,6 @@
             <property name="name">id@gtk_entry</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="placeholder-text" translatable="yes">input function</property>
           </object>
           <packing>
             <property name="expand">False</property>
