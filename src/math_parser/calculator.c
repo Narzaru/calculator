@@ -1,6 +1,7 @@
 /************
  * INCLUDES *
  ************/
+#include <stdlib.h>
 #include <math.h>
 #include <string.h>
 #include "calculator.h"
@@ -18,6 +19,45 @@ lexeme_t calc(stack_t *stack, lexeme_t command);
 /***************************
  * FUNCTION IMPLEMENTATION *
  ***************************/
+status_t calculator(char *expression, char *x_str, double *result) {
+    if (expression == NULL || result == NULL) {
+        return NULL_POINTER;
+    }
+
+    lexemes_t *tokens = form_tokens(expression);
+    if (!is_valid_tokens(tokens)) {
+        *result = NAN;
+        return INVALID_EXPRESSION;
+    }
+
+    lexemes_t *rpn = form_rpn(tokens);
+    if (rpn == NULL || !is_valid_rpn(rpn)) {
+        *result = NAN;
+        return INVALID_EXPRESSION_STRUCTURE;
+    }
+
+    char *endptr;
+    double x_val = strtod(x_str, &endptr);
+    if (endptr == x_str || *endptr != '\0') {
+        x_val = NAN;
+    }
+    lexeme_t res;
+    if (isnan(x_val)) {
+        res = calculate_rpn(rpn, NULL);
+    } else {
+        res = calculate_rpn(rpn, &x_val);
+    }
+    if (is_incorrect_type(res)) {
+        *result = NAN;
+        return INVALID_EXPRESSION_NO_X;
+    }
+
+    *result = res.value;
+    destroy_lexemes_struct(&rpn);
+    destroy_lexemes_struct(&tokens);
+    return OK;
+}
+
 lexeme_t calculate_rpn(lexemes_t *rpn, double *x_val) {
     stack_t *stack = create_stack();
     lexeme_t l;
@@ -37,7 +77,14 @@ lexeme_t calculate_rpn(lexemes_t *rpn, double *x_val) {
         }
     }
 
-    l = pop(stack);
+    if (!is_empty(stack)) {
+        l = pop(stack);
+    } else {
+        l.type = type_incorrect;
+        l.oper = operator_not_operation;
+        l.func = function_not_function;
+        l.value = NAN;
+    }
     destroy_stack(&stack);
     return l;
 }

@@ -16,6 +16,8 @@ bool is_right_associative(lexeme_t *l);
 
 int get_priority(lexeme_t l);
 
+int get_valence(lexeme_t l);
+
 /***************************
  * FUNCTION IMPLEMENTATION *
  ***************************/
@@ -162,4 +164,35 @@ int get_priority(lexeme_t l) {
         priority = -1;
     }
     return priority;
+}
+
+bool is_valid_rpn(lexemes_t *ls) {
+    bool is_valid;
+    int valence = 0;
+    for (int i = 0; i < ls->count_lexemes; ++i) {
+        valence += 1 - get_valence(get_lexeme_at(ls, i));
+    }
+
+    if (valence == 1) {
+        is_valid = true;
+    } else {
+        is_valid = false;
+    }
+
+    return is_valid;
+}
+
+int get_valence(lexeme_t l) {
+    int valence_of_token;
+    if (is_number_type(l) || is_x_var_type(l)) {
+        valence_of_token = 0;
+    }
+    if (is_operator_type(l)) {
+        valence_of_token = 2;
+    }
+    if (is_unary_type(l) || is_function_type(l)) {
+        valence_of_token = 1;
+    }
+
+    return valence_of_token;
 }

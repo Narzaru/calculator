@@ -3,6 +3,7 @@
 <interface>
   <requires lib="gtk+" version="3.24"/>
   <object class="GtkWindow" id="id@gtk_window">
+    <property name="name">id@gtk_window</property>
     <property name="visible">True</property>
     <property name="can-focus">True</property>
     <property name="title" translatable="yes">calculator</property>
@@ -33,7 +34,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="receives-default">True</property>
-                <signal name="clicked" handler="on_botton_plote_clicked" swapped="no"/>
+                <signal name="clicked" handler="on_botton_plote_clicked" object="id@gtk_window" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -77,14 +78,40 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="id@gtk_entry">
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="max-length">255</property>
-            <property name="activates-default">True</property>
-            <property name="progress-pulse-step">0</property>
-            <property name="placeholder-text" translatable="yes">input example</property>
-            <signal name="activate" handler="on_press_enter" swapped="no"/>
+            <property name="can-focus">False</property>
+            <property name="spacing">5</property>
+            <child>
+              <object class="GtkEntry" id="id@gtk_entry_expression">
+                <property name="name">id@gtk_entry_expression</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="max-length">255</property>
+                <property name="activates-default">True</property>
+                <property name="progress-pulse-step">0</property>
+                <property name="placeholder-text" translatable="yes">input example</property>
+                <signal name="activate" handler="on_press_enter" object="id@gtk_entry_x" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="id@gtk_entry_x">
+                <property name="name">id@gtk_entry_x</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="placeholder-text" translatable="yes">x value</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -122,7 +149,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_LOG_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_LOG_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -138,7 +165,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_LN_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_LN_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">1</property>
@@ -154,7 +181,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_TAN_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_TAN_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -170,7 +197,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_ATAN_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_ATAN_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">1</property>
@@ -203,7 +230,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_SIN_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_SIN_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -219,7 +246,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_COS_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_COS_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -235,7 +262,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_ASIN_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_ASIN_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">1</property>
@@ -251,7 +278,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_ACOS_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_ACOS_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">1</property>
@@ -284,7 +311,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_7_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_7_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -300,7 +327,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_8_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_8_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">1</property>
@@ -316,7 +343,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_9_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_9_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">2</property>
@@ -332,7 +359,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_DIV_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_DIV_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">3</property>
@@ -348,7 +375,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_SQRT_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_SQRT_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">4</property>
@@ -364,7 +391,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_4_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_4_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -380,7 +407,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_MOD_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_MOD_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">4</property>
@@ -396,7 +423,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_MUL_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_MUL_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">3</property>
@@ -412,7 +439,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_5_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_5_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">1</property>
@@ -428,7 +455,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_6_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_6_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">2</property>
@@ -461,7 +488,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_0_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_0_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -477,7 +504,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_1_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_1_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -493,7 +520,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_DOT_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_DOT_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">1</property>
@@ -509,7 +536,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_button_EQ_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_button_EQ_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">2</property>
@@ -525,7 +552,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_ADD_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_ADD_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">3</property>
@@ -541,7 +568,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_DEL_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_DEL_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">4</property>
@@ -557,7 +584,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_CLS_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_CLS_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">4</property>
@@ -573,7 +600,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_SUB_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_SUB_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">3</property>
@@ -589,7 +616,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_3_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_3_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">2</property>
@@ -605,7 +632,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_botton_2_clicked" object="id@gtk_entry" swapped="no"/>
+                    <signal name="clicked" handler="on_botton_2_clicked" object="id@gtk_entry_expression" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">1</property>
@@ -627,7 +654,7 @@
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <property name="border-width">1</property>
-                <signal name="clicked" handler="on_botton_BRACKET_CLOSE_clicked" object="id@gtk_entry" swapped="no"/>
+                <signal name="clicked" handler="on_botton_BRACKET_CLOSE_clicked" object="id@gtk_entry_expression" swapped="no"/>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -643,7 +670,7 @@
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <property name="border-width">1</property>
-                <signal name="clicked" handler="on_botton_BRACKET_OPEN_clicked" object="id@gtk_entry" swapped="no"/>
+                <signal name="clicked" handler="on_botton_BRACKET_OPEN_clicked" object="id@gtk_entry_expression" swapped="no"/>
               </object>
               <packing>
                 <property name="left-attach">1</property>

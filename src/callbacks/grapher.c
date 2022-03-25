@@ -66,19 +66,24 @@ void on_plote_graph(GtkButton *b, GtkGrid *plotter_window) {
     if (is_valid_tokens(tokens) && x_max > x_min && y_max > x_min) {
         rpn = form_rpn(tokens);
         if (rpn != NULL) {
-            linspace(x, x_min, x_max, count_of_dots);
-            for (int i = 0; i < count_of_dots; ++i) {
-                y[i] = calculate_rpn(rpn, &(x[i])).value;
-            }
-            destroy_lexemes_struct(&rpn);
+            if (is_valid_rpn(rpn)) {
+                linspace(x, x_min, x_max, count_of_dots);
+                for (int i = 0; i < count_of_dots; ++i) {
+                    y[i] = calculate_rpn(rpn, &(x[i])).value;
+                }
+                destroy_lexemes_struct(&rpn);
 
-            plotter_set_domain(y_min, y_max);
-            plotter_set_range(x_min, x_max);
-            plotter_set_function(x, y, count_of_dots);
-            gtk_widget_set_sensitive(GTK_WIDGET(plotter_window), FALSE);
-            gtk_widget_hide(GTK_WIDGET(plotter_window));
-            plotter_draw();
-            plotter_signal_connect_on_close(on_plotter_window_close, (gpointer)plotter_window);
+                plotter_set_domain(y_min, y_max);
+                plotter_set_range(x_min, x_max);
+                plotter_set_function(x, y, count_of_dots);
+                gtk_widget_set_sensitive(GTK_WIDGET(plotter_window), FALSE);
+                gtk_widget_hide(GTK_WIDGET(plotter_window));
+                plotter_draw();
+                plotter_signal_connect_on_close(on_plotter_window_close, (gpointer)plotter_window);
+            } else {
+                destroy_lexemes_struct(&rpn);
+                gtk_entry_set_text(GTK_ENTRY(widget), "error");    
+            }
         } else {
             gtk_entry_set_text(GTK_ENTRY(widget), "error");
         }

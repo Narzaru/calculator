@@ -9,7 +9,6 @@ void on_plote_window_close(GtkWidget *widget, gpointer main_window) {
     gtk_widget_set_sensitive(GTK_WIDGET(main_window), TRUE);
 }
 
-
 void on_botton_plote_clicked(GtkButton *b, gpointer main_window) {
     UNUSED(b);
     /* builder init */
@@ -32,32 +31,18 @@ void on_botton_plote_clicked(GtkButton *b, gpointer main_window) {
     gtk_widget_show_all(GTK_WIDGET(window));
 }
 
-void on_press_enter(GtkEntry *entry, gpointer null) {
-    UNUSED(null);
-
-    GtkEntryBuffer *buffer = gtk_entry_get_buffer(entry);
-    const gchar *str = gtk_entry_buffer_get_text(buffer);
-
-    char strout[256];
-
-    if (str != NULL) {
-        g_snprintf(strout, sizeof(str), "%s", str);
-        lexemes_t *tokens = form_tokens(strout);
-
-        if (is_valid_tokens(tokens)) {
-            lexemes_t *rpn = form_rpn(tokens);
-            if (rpn != NULL) {
-                lexeme_t res = calculate_rpn(rpn, NULL);
-                g_snprintf(strout, sizeof(strout), "%-f", res.value);
-                gtk_entry_buffer_set_text(buffer, strout, strlen(strout));
-                destroy_lexemes_struct(&rpn);
-            } else {
-                gtk_entry_buffer_set_text(buffer, "error", 6);
-            }
-        } else {
-            gtk_entry_buffer_set_text(buffer, "error", 6);
-        }
-        destroy_lexemes_struct(&tokens);
+void on_press_enter(GtkEntry *entry, gpointer entry_x) {
+    char expression[256];
+    char x_str[65];
+    strcpy(expression, gtk_entry_get_text(entry));
+    strcpy(x_str, gtk_entry_get_text(GTK_ENTRY(entry_x)));
+    
+    double result;
+    if (calculator(expression, x_str, &result) != OK) {
+        gtk_entry_buffer_set_text(gtk_entry_get_buffer(entry), "error", 6);
+    } else {
+        g_snprintf(expression, sizeof(expression), "%-f", result);
+        gtk_entry_buffer_set_text(gtk_entry_get_buffer(entry), expression, strlen(expression));
     }
 }
 

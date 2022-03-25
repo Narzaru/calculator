@@ -26,7 +26,7 @@ libstack.a:
 
 ## build object files
 $(BUILD_DIR)/%.o: %.c
-	$(CC) $(INCLUDE_FLAG) $< -c -o $@ $(ERROR_FLAGS) $(SANITIZE) -MD $(MATH_LIB)
+	$(CC) $(INCLUDE_FLAG) $< -c -o $@ $(ERROR_FLAGS) $(SANITIZE) -MD $(MATH_LIB) `pkg-config --cflags gtk+-3.0` `pkg-config --libs gtk+-3.0`
 
 ## build libstack.a target from object files
 libmathparser.a: $(OBJECT_FILES)
