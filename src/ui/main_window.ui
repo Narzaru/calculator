@@ -78,7 +78,8 @@
           </packing>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="id@inputs_box">
+            <property name="name">id@inputs_box</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="spacing">5</property>
@@ -537,7 +538,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="border-width">1</property>
-                    <signal name="clicked" handler="on_button_EQ_clicked" object="id@gtk_entry_expression" swapped="no"/>
+                    <signal name="clicked" handler="on_button_EQ_clicked" object="id@inputs_box" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">2</property>

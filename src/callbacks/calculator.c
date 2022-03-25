@@ -36,7 +36,7 @@ void on_press_enter(GtkEntry *entry, gpointer entry_x) {
     char x_str[65];
     strcpy(expression, gtk_entry_get_text(entry));
     strcpy(x_str, gtk_entry_get_text(GTK_ENTRY(entry_x)));
-    
+
     double result;
     if (calculator(expression, x_str, &result) != OK) {
         gtk_entry_buffer_set_text(gtk_entry_get_buffer(entry), "error", 6);
@@ -46,9 +46,13 @@ void on_press_enter(GtkEntry *entry, gpointer entry_x) {
     }
 }
 
-void on_button_EQ_clicked(GtkButton *b, gpointer io_field) {
+void on_button_EQ_clicked(GtkButton *b, gpointer input_box) {
     UNUSED(b);
-    on_press_enter(io_field, NULL);
+    g_print("%p\n", find_child(GTK_WIDGET(input_box), "id@gtk_entry_expression"));
+    g_print("%p\n", find_child(GTK_WIDGET(input_box), "id@gtk_entry_x"));
+    on_press_enter(
+        GTK_ENTRY(find_child(GTK_WIDGET(input_box), "id@gtk_entry_expression")),
+        GTK_ENTRY(find_child(GTK_WIDGET(input_box), "id@gtk_entry_x")));
 }
 
 void on_botton_LOG_clicked(GtkButton *b, gpointer io_field) {
