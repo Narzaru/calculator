@@ -1,6 +1,7 @@
 /************
  * INCLUDES *
  ************/
+#include <gtk/gtk.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -103,7 +104,6 @@ lexemes_t *form_tokens(char *expression) {
                 ++j;
             }
         }
-
         /* parse token into lexeme_t type */
         construct_lexeme(&lexeme, token);
         /* push lexeme at top of lexemes */

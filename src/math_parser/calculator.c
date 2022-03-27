@@ -27,12 +27,17 @@ status_t calculator(char *expression, char *x_str, double *result) {
     lexemes_t *tokens = form_tokens(expression);
     if (!is_valid_tokens(tokens)) {
         *result = NAN;
+        destroy_lexemes_struct(&tokens);
         return INVALID_EXPRESSION;
     }
 
     lexemes_t *rpn = form_rpn(tokens);
     if (rpn == NULL || !is_valid_rpn(rpn)) {
         *result = NAN;
+        destroy_lexemes_struct(&tokens);
+        if (rpn != NULL) {
+            destroy_lexemes_struct(&rpn);
+        }
         return INVALID_EXPRESSION_STRUCTURE;
     }
 
@@ -49,6 +54,8 @@ status_t calculator(char *expression, char *x_str, double *result) {
     }
     if (is_incorrect_type(res)) {
         *result = NAN;
+        destroy_lexemes_struct(&tokens);
+        destroy_lexemes_struct(&rpn);
         return INVALID_EXPRESSION_NO_X;
     }
 
@@ -133,7 +140,11 @@ lexeme_t calc(stack_t *stack, lexeme_t command) {
         l1 = pop(stack);
         l2 = pop(stack);
         memcpy(&lo, &l1, sizeof(lexeme_t));
-        lo.value = l2.value / l1.value;
+        if (l1.value < __DBL_EPSILON__) {
+            lo.value = NAN;
+        } else {
+            lo.value = l2.value / l1.value;
+        }
     } else if (command.oper == operator_mod) {
         l1 = pop(stack);
         l2 = pop(stack);

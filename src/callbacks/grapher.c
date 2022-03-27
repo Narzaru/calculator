@@ -4,6 +4,14 @@
 #include "calculator.h"
 #include "simple_grapher/grapher.h"
 
+#define repace_dot(str) { \
+    for (size_t i = 0; i < strlen(str); ++i) { \
+        if (str[i] == '.') { \
+            str[i] = ','; \
+        } \
+    } \
+}
+
 extern double *x;
 extern double *y;
 extern int count_of_dots;
@@ -26,6 +34,7 @@ void on_plote_graph(GtkButton *b, GtkGrid *plotter_window) {
 
     widget = find_child(GTK_WIDGET(plotter_window), "id@gtk_xmin");
     g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
+    repace_dot(str);
     x_min = strtod(str, &endptr);
     if (endptr == str || *endptr != '\0') {
         gtk_entry_set_text(GTK_ENTRY(widget), "error");
@@ -34,6 +43,7 @@ void on_plote_graph(GtkButton *b, GtkGrid *plotter_window) {
 
     widget = find_child(GTK_WIDGET(plotter_window), "id@gtk_xmax");
     g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
+    repace_dot(str);
     x_max = strtod(str, &endptr);
     if (endptr == str || *endptr != '\0') {
         gtk_entry_set_text(GTK_ENTRY(widget), "error");
@@ -42,6 +52,7 @@ void on_plote_graph(GtkButton *b, GtkGrid *plotter_window) {
 
     widget = find_child(GTK_WIDGET(plotter_window), "id@gtk_ymin");
     g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
+    repace_dot(str);
     y_min = strtod(str, &endptr);
     if (endptr == str || *endptr != '\0') {
         gtk_entry_set_text(GTK_ENTRY(widget), "error");
@@ -50,6 +61,7 @@ void on_plote_graph(GtkButton *b, GtkGrid *plotter_window) {
 
     widget = find_child(GTK_WIDGET(plotter_window), "id@gtk_ymax");
     g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
+    repace_dot(str);
     y_max = strtod(str, &endptr);
     if (endptr == str || *endptr != '\0') {
         gtk_entry_set_text(GTK_ENTRY(widget), "error");
@@ -59,9 +71,8 @@ void on_plote_graph(GtkButton *b, GtkGrid *plotter_window) {
     widget = find_child(GTK_WIDGET(plotter_window), "id@gtk_entry");
     g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
 
-
-    lexemes_t *rpn;
     lexemes_t *tokens = form_tokens(str);
+    lexemes_t *rpn;
 
     if (is_valid_tokens(tokens) && x_max > x_min && y_max > x_min) {
         rpn = form_rpn(tokens);
@@ -82,7 +93,7 @@ void on_plote_graph(GtkButton *b, GtkGrid *plotter_window) {
                 plotter_signal_connect_on_close(on_plotter_window_close, (gpointer)plotter_window);
             } else {
                 destroy_lexemes_struct(&rpn);
-                gtk_entry_set_text(GTK_ENTRY(widget), "error");    
+                gtk_entry_set_text(GTK_ENTRY(widget), "error");
             }
         } else {
             gtk_entry_set_text(GTK_ENTRY(widget), "error");

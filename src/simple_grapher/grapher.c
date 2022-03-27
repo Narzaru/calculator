@@ -43,38 +43,6 @@ void cut_tops(double *y, unsigned count_of_dots, double y_min, double y_max) {
     }
 }
 
-double find_max(double *array, uint64_t array_length) {
-    double max = array[0];
-    uint64_t i = 0;
-
-    while (i < array_length) {
-        while ((i < (array_length)) && (isinf(array[i]) || isnan(array[i]))) {
-            ++i;
-        }
-        if (i < array_length && array[i] > max) {
-            max = array[i];
-        }
-        ++i;
-    }
-    return max;
-}
-
-double find_min(double *array, uint64_t array_length) {
-    double min = array[0];
-    uint64_t i = 0;
-
-    while (i < array_length) {
-        while ((i < (array_length)) && (isinf(array[i]) || isnan(array[i]))) {
-            ++i;
-        }
-        if (i < array_length && array[i] < min) {
-            min = array[i];
-        }
-        ++i;
-    }
-    return min;
-}
-
 void linspace(double *x, double x_start, double x_end, unsigned count_of_dots) {
     count_of_dots = count_of_dots - 1;
     double dx = (x_end - x_start) / count_of_dots;
@@ -260,7 +228,7 @@ void draw_labels(cairo_t *cr, packed_data_t *data) {
     gchar str_num[32];
     cairo_text_extents_t extents;
 
-    /* label axis x from below */
+    /* label axis x from bot to top */
     cairo_set_source_rgb(cr, 128.0, 128.0, 0.0);
     cairo_select_font_face(cr, "Helvetica", CAIRO_FONT_SLANT_ITALIC, CAIRO_FONT_WEIGHT_NORMAL);
     cairo_set_font_size(cr, 12.0);
@@ -276,7 +244,7 @@ void draw_labels(cairo_t *cr, packed_data_t *data) {
         cairo_restore(cr);
     }
 
-    /* label axis x from left */
+    /* label axis x from left to right*/
     for (int i = 0; i < 7; ++i) {
         g_snprintf(str_num, sizeof(str_num), "%.6g", data->y_max - i * dgrid_y);
         cairo_save(cr);
@@ -288,5 +256,13 @@ void draw_labels(cairo_t *cr, packed_data_t *data) {
         cairo_show_text(cr, str_num);
         cairo_restore(cr);
     }
+
+    g_snprintf(str_num, sizeof(str_num), "x/y %.6g",
+        -1
+        * (((data->box_right - data->box_left) / (data->x_max - data->x_min))
+        / ((data->box_top - data->box_bot) / (data->y_max - data->y_min))));
+    cairo_move_to(cr, data->box_right + 2, data->box_top + extents.height);
+    cairo_text_extents(cr, str_num, &extents);
+    cairo_show_text(cr, str_num);
     cairo_stroke(cr);
 }

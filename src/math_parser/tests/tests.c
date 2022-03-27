@@ -19,11 +19,11 @@ Suite *example_suite_create(void) {
 int main(void) {
     Suite *suite = example_suite_create();
     SRunner *suite_runner = srunner_create(suite);
-    
+
     srunner_run_all(suite_runner, CK_NORMAL);
     int failed_count = srunner_ntests_failed(suite_runner);
     srunner_free(suite_runner);
-    
+
     if (failed_count != 0) {
         return EXIT_FAILURE;
     }

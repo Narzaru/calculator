@@ -26,7 +26,6 @@
  ************************/
 void linspace(double *x, double x_start, double x_end, unsigned count_of_dots);
 
-/* called once in main body */
 void plotter_init();
 
 void plotter_set_function(double *x, double *y, unsigned count_of_dots);
