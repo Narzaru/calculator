@@ -34,7 +34,7 @@ void on_plote_graph(GtkButton *b, GtkGrid *plotter_window) {
 
     widget = find_child(GTK_WIDGET(plotter_window), "id@gtk_xmin");
     g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
-    repace_dot(str);
+    to_locale_decimal_point(str);
     x_min = strtod(str, &endptr);
     if (endptr == str || *endptr != '\0') {
         gtk_entry_set_text(GTK_ENTRY(widget), "error");
@@ -43,7 +43,7 @@ void on_plote_graph(GtkButton *b, GtkGrid *plotter_window) {
 
     widget = find_child(GTK_WIDGET(plotter_window), "id@gtk_xmax");
     g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
-    repace_dot(str);
+    to_locale_decimal_point(str);
     x_max = strtod(str, &endptr);
     if (endptr == str || *endptr != '\0') {
         gtk_entry_set_text(GTK_ENTRY(widget), "error");
@@ -52,7 +52,7 @@ void on_plote_graph(GtkButton *b, GtkGrid *plotter_window) {
 
     widget = find_child(GTK_WIDGET(plotter_window), "id@gtk_ymin");
     g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
-    repace_dot(str);
+    to_locale_decimal_point(str);
     y_min = strtod(str, &endptr);
     if (endptr == str || *endptr != '\0') {
         gtk_entry_set_text(GTK_ENTRY(widget), "error");
@@ -61,7 +61,7 @@ void on_plote_graph(GtkButton *b, GtkGrid *plotter_window) {
 
     widget = find_child(GTK_WIDGET(plotter_window), "id@gtk_ymax");
     g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
-    repace_dot(str);
+    to_locale_decimal_point(str);
     y_max = strtod(str, &endptr);
     if (endptr == str || *endptr != '\0') {
         gtk_entry_set_text(GTK_ENTRY(widget), "error");

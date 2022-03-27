@@ -59,10 +59,6 @@ lexeme_t get_lexeme_at(lexemes_t *ls, long int at) {
     return ls->all[at];
 }
 
-void set_lexeme_at(lexemes_t *ls, lexeme_t l, long int at) {
-    ls->all[at] = l;
-}
-
 bool is_incorrect_type(lexeme_t l) {
     bool is_incorrect;
     if (l.type == type_incorrect) {

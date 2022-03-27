@@ -284,10 +284,7 @@ double get_lexeme_value(enum lexeme_type type, char *token) {
     double result;
     if (type == type_number) {
         char *p_char;
-        char *dot_pos = strchr(token, '.');
-        if (dot_pos != NULL) {
-            *dot_pos = ',';
-        }
+        to_locale_decimal_point(token);
         result = strtod(token, &p_char);
         /* if all string is converted */
         if (p_char != NULL) {

@@ -1,6 +1,7 @@
 /************
  * INCLUDES *
  ************/
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -45,6 +46,7 @@ status_t calculator(char *expression, char *x_str, double *result) {
     char *endptr;
     double x_val;
     if (x_str != NULL) {
+        to_locale_decimal_point(x_str);
         x_val = strtod(x_str, &endptr);
         if (endptr == x_str || *endptr != '\0') {
             x_val = NAN;
@@ -206,4 +208,18 @@ lexeme_t calc(stack_t *stack, lexeme_t command) {
     }
 
     return lo;
+}
+
+void to_locale_decimal_point(char *string) {
+    char cur_delim = ',';
+    char new_delim = '.';
+    if (*localeconv()->decimal_point == ',') {
+        cur_delim = '.';
+        new_delim = ',';
+    }
+    for (size_t i = 0; i < strlen(string); ++i) {
+        if (string[i] == cur_delim) {
+            string[i] = new_delim;
+        }
+    }
 }

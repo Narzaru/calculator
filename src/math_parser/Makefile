@@ -34,7 +34,7 @@ $(BUILD_DIR)/%.o: %.c
 
 ## build object files for tests and coverage
 $(BUILD_DIR_TEST)/%.o: %.c
-	$(CC) $(COVERAGE_FLAG) $(INCLUDE_FLAG) -c $< -o $@ $(ERROR_FLAGS) $(SANITIZE) -MD $(MATH_LIB)
+	$(CC) $(COVERAGE_FLAG) $(INCLUDE_FLAG) -c $< -o $@ $(ERROR_FLAGS) $(SANITIZE) -MD $(MATH_LIB) `pkg-config --cflags gtk+-3.0` `pkg-config --libs gtk+-3.0`
 
 ## build libmathparser.a target from object files
 libmathparser.a: $(OBJECT_FILES)
@@ -46,6 +46,14 @@ libmathparser.a: $(OBJECT_FILES)
 test.out: clean $(OBJECT_TEST_FILES) libstack.a
 	$(CC) $(COVERAGE_FLAG) $(INCLUDE_FLAG) ./tests/tests.c $(OBJECT_TEST_FILES) libstack.a -o $@ $(ERROR_FLAGS) $(SANITIZE) -MD $(MATH_LIB) $(CHECK_LIB)
 	./test.out
+
+## gcov report target
+gcov_report: test.out
+	./$<
+	lcov -t "$<" -o gcovreport.info -c -d build/test
+	genhtml -o $@ gcovreport.info
+	open gcov_report/index.html
+
 
 #### phony targets
 .PHONY: clean all re clear
@@ -61,6 +69,8 @@ clean:
 	find . -name "*.d" -delete
 	find . -name "*gcno" -delete
 	find . -name "*gcda" -delete
+	rm -rf gcov_report
+	rm -rf gcovreport.info
 
 clear:
 	clear

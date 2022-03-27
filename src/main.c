@@ -26,7 +26,6 @@ int main(int argc, char *argv[]) {
     gtk_builder_connect_signals(builder, NULL);
 
     gtk_widget_show_all(GTK_WIDGET(window));
-
     gtk_main();
 
     free(x);
