@@ -1,9 +1,14 @@
 #include <stdlib.h>
 #include <check.h>
+#include <calculator.h>
 
 
 START_TEST(test_name) {
-  /* Исходный код теста. */
+    status_t status;
+    double result;
+    status = calculator("1 + 3", NULL, &result);
+    ck_assert_int_eq(status, OK);
+    ck_assert_double_eq(result, 4.0);
 } END_TEST
 
 

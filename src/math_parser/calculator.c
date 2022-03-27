@@ -1,6 +1,7 @@
 /************
  * INCLUDES *
  ************/
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
@@ -42,9 +43,12 @@ status_t calculator(char *expression, char *x_str, double *result) {
     }
 
     char *endptr;
-    double x_val = strtod(x_str, &endptr);
-    if (endptr == x_str || *endptr != '\0') {
-        x_val = NAN;
+    double x_val;
+    if (x_str != NULL) {
+        x_val = strtod(x_str, &endptr);
+        if (endptr == x_str || *endptr != '\0') {
+            x_val = NAN;
+        }
     }
     lexeme_t res;
     if (isnan(x_val)) {

@@ -66,6 +66,8 @@ clean:
 	find . -name "*.a" -delete
 	find . -name "*.d" -delete
 	find . -name "*.gz" -delete
+	find . -name "*gcno" -delete
+	find . -name "*gcda" -delete
 
 linter:
 	cp ../materials/linters/CPPLINT.cfg .
