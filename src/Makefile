@@ -40,9 +40,27 @@ $(BUILD_FOLDER)/%.o: %.c
 
 calculator: $(OBJECT_FILES) $(BUILD_FOLDER)/libmathparser.a $(BUILD_FOLDER)/libstack.a $(BUILD_FOLDER)/libgrapher.a
 	$(CC) `pkg-config --cflags gtk+-3.0` -o $@ $(ERROR_FLAGS) $(DEBUG_FLAGS) $(MATH_LIB) `pkg-config --libs gtk+-3.0` $(INCLUDE_FLAG) -rdynamic $^
-	./$@
 
-all: calculator
+all: calculator gcov_report
+
+install: calculator
+	cp ./calculator ../program
+	cp -r ./ui ../program
+
+unistall:
+	rm -rf ../program/*
+
+clean:
+	make -C ./math_parser/ clean
+	make -C ./stack/ clean
+	make -C ./simple_grapher clean
+	find . -name "*.o" -delete
+	find . -name "*.a" -delete
+	find . -name "*.d" -delete
+	find . -name "*.gz" -delete
+	find . -name "*.tar" -delete
+	rm -rf src	
+	rm -f calculator
 
 dist:
 	for dir in $(PROJECT_FOLDERS); \
@@ -63,8 +81,9 @@ dist:
 	cp stack/*.h src/stack
 	cp stack/Makefile src/stack
 
-	cp plotter/*.c src/plotter
-	cp plotter/*.h src/plotter
+	cp simple_grapher/*.c src/simple_grapher
+	cp simple_grapher/*.h src/simple_grapher
+	cp simple_grapher/Makefile src/simple_grapher
 
 	cp ui/*.ui src/ui
 
@@ -75,20 +94,17 @@ dist:
 	tar -zcf src.tar src
 	gzip src.tar
 
-install: calculator
+	rm -rf src
 
-unistall:
-	rm -f calculator
+tests:
+	make -C ./math_parser/ test.out
+	./math_parser/test.out
 
-.PHONY: clean linter install unsitall all
+gcov_report: tests
+	make -C ./math_parser/ gcov_report
+	open ./math_parser/gcov_report/index.html
 
-clean: unistall
-	make -C ./math_parser/ clean
-	make -C ./stack/ clean
-	make -C ./simple_grapher clean
-	find . -name "*.o" -delete
-	find . -name "*.a" -delete
-	find . -name "*.d" -delete
+.PHONY: clean linter install unsitall all tests gcov_report
 
 linter:
 	cp ../materials/linters/CPPLINT.cfg .

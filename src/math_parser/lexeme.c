@@ -4,7 +4,7 @@
 
 #include "lexeme.h"
 
-#define STD_CAP 128
+#define STD_CAP 64
 
 lexemes_t *new_lexemes_struct(void) {
     lexemes_t *new_object;
