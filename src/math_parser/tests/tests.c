@@ -51,9 +51,9 @@ START_TEST(test_name) {
         NULL,
         &result);
     ck_assert_int_eq(status, OK);
-    ck_assert_msg(fabs(result - 54) < FLT_EPSILON,
+    ck_assert_msg(fabs(result - 41.0) < FLT_EPSILON,
         "%e < %e",
-        fabs(result - 54),
+        fabs(result - 41.0),
         FLT_EPSILON);
 
     status = calculator("acos(asin(log(4)))", NULL, &result);

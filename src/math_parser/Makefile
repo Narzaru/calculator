@@ -43,16 +43,15 @@ libmathparser.a: $(OBJECT_FILES)
 	ranlib $@
 
 ## build test
-test.out: clean $(OBJECT_TEST_FILES) libstack.a
+test.out: ./tests/tests.c $(OBJECT_TEST_FILES) libstack.a
 	$(CC) $(COVERAGE_FLAG) $(INCLUDE_FLAG) ./tests/tests.c $(OBJECT_TEST_FILES) libstack.a -o $@ $(ERROR_FLAGS) $(SANITIZE) -MD $(MATH_LIB) $(CHECK_LIB)
-	./test.out
 
 ## gcov report target
 gcov_report: test.out
 	./$<
 	lcov -t "$<" -o gcovreport.info -c -d build/test
 	genhtml -o $@ gcovreport.info
-	open gcov_report/index.html
+#	open gcov_report/index.html
 
 
 #### phony targets
@@ -74,8 +73,3 @@ clean:
 
 clear:
 	clear
-
-#### extra targets
-fprog: clear libmathparser.a libstack.a
-	$(CC) $(INCLUDE_FLAG) $(ERROR_FLAGS) $(SANITIZE) main.c libmathparser.a libstack.a -o main.out $(MATH_LIB)
-	./main.out

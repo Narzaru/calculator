@@ -2,28 +2,50 @@ CC := gcc -std=c11
 ERROR_FLAGS := -Wall -Wextra
 DEBUG_FLAGS := -g -fsanitize=address
 MATH_LIB := -lm
-FOLDERS := src src/math_parser src/math_parser/build src/plotter src/stack src/stack/build src/ui
+
+BUILD_FOLDER := build
+SOURCE_FILES := $(wildcard *.c)
+SOURCE_FILES += $(wildcard callbacks/*.c)
+OBJECT_FILES := $(addprefix $(BUILD_FOLDER)/,$(SOURCE_FILES:.c=.o))
+
+PROJECT_ROOT_FOLDER := src
+PROJECT_FOLDERS := \
+	$(PROJECT_ROOT_FOLDER) \
+	$(PROJECT_ROOT_FOLDER)/math_parser \
+	$(PROJECT_ROOT_FOLDER)/math_parser/build \
+	$(PROJECT_ROOT_FOLDER)/simple_grapher \
+	$(PROJECT_ROOT_FOLDER)/simple_grapher/build \
+	$(PROJECT_ROOT_FOLDER)/stack \
+	$(PROJECT_ROOT_FOLDER)/stack/build \
+	$(PROJECT_ROOT_FOLDER)/ui
 
 #### build options
-INCLUDE_PATH := . math_parser/ stack/ plotter/
+INCLUDE_PATH := . math_parser stack simple_grapher
 INCLUDE_FLAG := $(addprefix -I,$(INCLUDE_PATH))
 
-libmathparser.a:
+$(BUILD_FOLDER)/libmathparser.a:
 	make -C ./math_parser/ libmathparser.a
-	cp ./math_parser/libmathparser.a .
+	cp ./math_parser/libmathparser.a ./build/
 
-libstack.a:
+$(BUILD_FOLDER)/libstack.a:
 	make -C ./stack/ libstack.a
-	cp ./stack/libstack.a .
+	cp ./stack/libstack.a ./build/
 
-calculator.out: clean libmathparser.a libstack.a
-	$(CC) `pkg-config --cflags gtk+-3.0` main.c gtk_help.c callbacks/calculator.c callbacks/grapher.c simple_grapher/grapher.c -o $@ $(ERROR_FLAGS) $(DEBUG_FLAGS) $(MATH_LIB) `pkg-config --libs gtk+-3.0` $(INCLUDE_FLAG) -rdynamic libmathparser.a libstack.a
+$(BUILD_FOLDER)/libgrapher.a:
+	make -C ./simple_grapher libgrapher.a
+	cp ./simple_grapher/libgrapher.a ./build/
+
+$(BUILD_FOLDER)/%.o: %.c
+	$(CC) $(INCLUDE_FLAG) $< -c -o $@ $(ERROR_FLAGS) $(SANITIZE) -MD $(MATH_LIB) `pkg-config --cflags gtk+-3.0` `pkg-config --libs gtk+-3.0`
+
+calculator: $(OBJECT_FILES) $(BUILD_FOLDER)/libmathparser.a $(BUILD_FOLDER)/libstack.a $(BUILD_FOLDER)/libgrapher.a
+	$(CC) `pkg-config --cflags gtk+-3.0` -o $@ $(ERROR_FLAGS) $(DEBUG_FLAGS) $(MATH_LIB) `pkg-config --libs gtk+-3.0` $(INCLUDE_FLAG) -rdynamic $^
 	./$@
 
-all: calculator.out
+all: calculator
 
 dist:
-	for dir in $(FOLDERS); \
+	for dir in $(PROJECT_FOLDERS); \
 	do \
 		if [ ! -d $$dir ]; \
 		then \
@@ -53,21 +75,20 @@ dist:
 	tar -zcf src.tar src
 	gzip src.tar
 
-install: calculator.out
+install: calculator
 
 unistall:
-	rm -f calculator.out
+	rm -f calculator
 
 .PHONY: clean linter install unsitall all
 
-clean:
+clean: unistall
+	make -C ./math_parser/ clean
+	make -C ./stack/ clean
+	make -C ./simple_grapher clean
 	find . -name "*.o" -delete
-	find . -name "*.out" -delete
 	find . -name "*.a" -delete
 	find . -name "*.d" -delete
-	find . -name "*.gz" -delete
-	find . -name "*gcno" -delete
-	find . -name "*gcda" -delete
 
 linter:
 	cp ../materials/linters/CPPLINT.cfg .
