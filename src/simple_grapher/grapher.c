@@ -1,6 +1,7 @@
 #include <math.h>
 #include <stdint.h>
 
+#include "cairo.h"
 #include "grapher.h"
 
 /* like a private things */
@@ -129,6 +130,11 @@ gboolean on_draw_call(GtkWidget *draw_area, cairo_t *cr, gpointer null) {
         ymax
     };
 
+    cairo_save(cr);
+    cairo_set_source_rgb(cr, 1, 1, 1);
+    cairo_paint(cr);
+    cairo_restore(cr);
+
     draw_function(cr, &data);
 
     draw_box(cr, &data);
@@ -190,7 +196,7 @@ void draw_box(cairo_t *cr, packed_data_t *data) {
 void draw_axes(cairo_t *cr, packed_data_t *data) {
     cairo_text_extents_t extents;
 
-    cairo_set_source_rgb(cr, 128.0, 128.0, 0);
+    cairo_set_source_rgb(cr, 0, 0, 0);
     cairo_select_font_face(cr, "Helvetica", CAIRO_FONT_SLANT_ITALIC, CAIRO_FONT_WEIGHT_BOLD);
     cairo_set_font_size(cr, 24);
     cairo_text_extents(cr, "x", &extents);
@@ -200,11 +206,8 @@ void draw_axes(cairo_t *cr, packed_data_t *data) {
     cairo_select_font_face(cr, "Helvetica", CAIRO_FONT_SLANT_ITALIC, CAIRO_FONT_WEIGHT_BOLD);
     cairo_set_font_size(cr, 24);
     cairo_text_extents(cr, "y", &extents);
-    cairo_move_to(cr, data->box_left + extents.height*0.8, data->box_top);
-    cairo_save(cr);
-    cairo_rotate(cr, -PI/2);
+    cairo_move_to(cr, data->box_left, data->box_top);
     cairo_show_text(cr, "y");
-    cairo_restore(cr);
     cairo_stroke(cr);
 
     cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
@@ -229,7 +232,7 @@ void draw_labels(cairo_t *cr, packed_data_t *data) {
     cairo_text_extents_t extents;
 
     /* label axis x from bot to top */
-    cairo_set_source_rgb(cr, 128.0, 128.0, 0.0);
+    cairo_set_source_rgb(cr, 0, 0, 0.0);
     cairo_select_font_face(cr, "Helvetica", CAIRO_FONT_SLANT_ITALIC, CAIRO_FONT_WEIGHT_NORMAL);
     cairo_set_font_size(cr, 12.0);
     for (int i = 0; i < 7; ++i) {
