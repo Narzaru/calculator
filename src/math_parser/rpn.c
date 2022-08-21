@@ -104,7 +104,7 @@ lexemes_t *form_rpn(lexemes_t *ls) {
                 && ((!is_right_associative(&l)
                         && get_priority(peek(stack)) >= get_priority(l))
                     || (is_right_associative(&l)
-                        && get_priority(peek(stack)) > get_priority(l)))) {
+                        && get_priority(peek(stack)) == get_priority(l)))) {
                 push_lexem(&out_lexeme, pop(stack));
             }
             push(&stack, l);
