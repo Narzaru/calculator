@@ -1,5 +1,5 @@
 #### build flags
-CC := gcc -std=c11
+CC := gcc -std=c11 -O3
 ERROR_FLAGS := -Wall -Wextra
 SANITIZE := -g3 -fsanitize=address
 MAKE_DEPENDENCE := -MD
