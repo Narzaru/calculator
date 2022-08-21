@@ -4,7 +4,7 @@
 
 double *x;
 double *y;
-int count_of_dots = 500000;
+int count_of_dots = 200000;
 
 int main(int argc, char *argv[]) {
     x = calloc(sizeof(double), count_of_dots);
