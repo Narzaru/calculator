@@ -98,14 +98,11 @@ lexemes_t *form_rpn(lexemes_t *ls) {
             if (is_unary) {
                 to_unary(&l);
             }
-            while (
-                !is_empty(stack)
-                && is_operator_type(peek(stack))
-                && ((!is_right_associative(&l)
-                        && get_priority(peek(stack)) >= get_priority(l))
-                    || (is_right_associative(&l)
-                        && get_priority(peek(stack)) == get_priority(l)))) {
-                push_lexem(&out_lexeme, pop(stack));
+            while (!is_empty(stack) && is_operator_type(peek(stack)) &&
+                   ((get_priority(peek(stack)) > get_priority(l)) ||
+                    (!is_right_associative(&l) &&
+                     (get_priority(l) == get_priority(peek(stack)))))) {
+              push_lexem(&out_lexeme, pop(stack));
             }
             push(&stack, l);
             is_unary = true;
@@ -159,7 +156,7 @@ int get_priority(lexeme_t l) {
     } else if (oper == operator_pow) {
         priority = 3;
     } else if (oper >= operator_unary_add || oper <= operator_unary_sub) {
-        priority = 4;
+        priority = 3;
     } else {
         priority = -1;
     }
