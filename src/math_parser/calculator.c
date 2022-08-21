@@ -146,7 +146,7 @@ lexeme_t calc(stack_t *stack, lexeme_t command) {
         l1 = pop(stack);
         l2 = pop(stack);
         memcpy(&lo, &l1, sizeof(lexeme_t));
-        if (l1.value < __DBL_EPSILON__) {
+        if (fabs(l1.value) < __DBL_EPSILON__) {
             lo.value = NAN;
         } else {
             lo.value = l2.value / l1.value;
